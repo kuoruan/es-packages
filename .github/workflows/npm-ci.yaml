@@ -26,3 +26,4 @@ jobs:
             yarn build
             echo "$pkg build success."
           done
+        shell: sh
