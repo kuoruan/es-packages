@@ -1,0 +1,23 @@
+{
+  "name": "@kuoruan/es-packages",
+  "version": "1.0.0",
+  "description": "ES packages",
+  "author": "Xingwang Liao <kuoruan@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.22.0",
+    "@typescript-eslint/parser": "^2.22.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.3",
+    "install-deps-postmerge": "^1.0.5",
+    "lint-staged": "^10.0.8",
+    "prettier": "^2.0.4",
+    "typescript": "^3.8.3"
+  }
+}
