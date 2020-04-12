@@ -16,14 +16,23 @@ jobs:
         run: yarn install
       - name: Build test
         run: |
-          for pkg in $(
+          changed_packages=$(
             git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | \
             sed -n "s|^packages/\([^/]*\)/.*$|\1|p" | sort -u
-          ) ; do
+          )
+
+          if [ -n "$changed_packages" ] ; then
+            echo "Changed packages: $changed_packages"
+          else
+            echo "No packages changed."
+            exit 0
+          fi
+
+          for pkg in $changed_packages ; do
             echo "Testing build for $pkg..."
-            cd "${{ github.workspace }}/$pkg"
+            cd "${{ github.workspace }}/packages/$pkg"
             yarn install
             yarn build
             echo "$pkg build success."
           done
-        shell: sh
+          cd "${{ github.workspace }}"
