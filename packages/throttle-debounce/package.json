@@ -5,6 +5,7 @@
   "main": "dist/throttle-debounce.cjs.js",
   "module": "dist/throttle-debounce.es.js",
   "jsnext:main": "dist/throttle-debounce.es.js",
+  "types": "dist/index.d.ts",
   "author": "Xingwang Liao <kuoruan@gmail.com>",
   "license": "MIT",
   "files": [
@@ -17,14 +18,13 @@
     "debounce",
     "typescript"
   ],
-  "types": "dist/index.d.ts",
-  "homepage": "https://github.com/kuoruan/throttle-debounce#readme",
+  "homepage": "https://github.com/kuoruan/es-packages/tree/master/packages/throttle-debounce#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kuoruan/throttle-debounce.git"
+    "url": "git+https://github.com/kuoruan/es-packages.git"
   },
   "bugs": {
-    "url": "https://github.com/kuoruan/throttle-debounce/issues"
+    "url": "https://github.com/kuoruan/es-packages/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -33,8 +33,8 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^4.1.0",
     "rollup": "^2.0.0",
-    "rollup-plugin-typescript2": "^0.27.0"
+    "rollup-plugin-typescript2": "^0.27.0",
+    "typescript": "^3.8.3"
   }
 }
