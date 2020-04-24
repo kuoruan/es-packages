@@ -7,11 +7,11 @@ export default {
   output: [
     {
       file: pkg.main,
-      format: "cjs"
+      format: "cjs",
     },
     {
       file: pkg.module,
-      format: "es"
+      format: "es",
     },
   ],
   external: [
