@@ -19,23 +19,22 @@ jobs:
       - name: Install base packages
         run: yarn install
 
-      - id: getfile
-        name: Get changed files
-        run: |
-          echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})"
-
       - id: getpackage
         name: Get changed packages
         run: |
-          changed_packages="$(echo "${{ steps.getfile.outputs.files }}" | sed -n 's|^packages/\([^/]*\)/.*$|\1|p' | sort -u)"
+          changed_files="$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})"
 
-          echo "::set-output name=packages::$changed_packages"
+          echo "Changed files: $changed_files"
+
+          changed_packages="$(echo "$changed_files" | sed -n 's|^packages/\([^/]*\)/.*$|\1|p' | sort -u | xargs)"
 
           if [ -n "$changed_packages" ] ; then
             echo "Packges changed: $changed_packages"
           else
             echo "No packages changed."
           fi
+
+          echo "::set-output name=packages::$changed_packages"
 
       - name: Build test
         if: steps.getpackage.outputs.packages != ''
