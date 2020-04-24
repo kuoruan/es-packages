@@ -30,9 +30,9 @@ jobs:
           echo "::set-output name=packages::$changed_packages"
 
           if [ -n "$changed_packages" ] ; then
-            echo "No packages changed."
-          else
             echo "Packges changed: $changed_packages"
+          else
+            echo "No packages changed."
           fi
 
       - name: Build test
