@@ -44,7 +44,8 @@ jobs:
           echo "::set-output name=version::$version"
           echo "::set-output name=package::$package"
 
-      - name: Check package
+      - id: check_package
+        name: Check package
         run: |
           if [ -z "${{ steps.get_info.outputs.package }}" ] ; then
             echo "Can't get release package name."
@@ -68,9 +69,13 @@ jobs:
           if [ ! -f "LICENSE" ] && [ -f "${{ github.workspace }}/LICENSE" ] ; then
             cp "${{ github.workspace }}/LICENSE" .
           fi
+
+          echo "::set-output name=folder::$folder"
       
       - name: Build and publish
         run: |
+          cd "${{ steps.check_package.outputs.folder }}"
+          
           yarn install
           yarn build
           yarn publish
