@@ -1,0 +1,30 @@
+{
+  "name": "@kuoruan/webp-supported",
+  "version": "1.0.0",
+  "description": "Detect whether the browser supports webp",
+  "main": "dist/webp-supported.cjs.js",
+  "module": "dist/webp-supported.es.js",
+  "jsnext:main": "dist/webp-supported.es.js",
+  "types": "dist/index.d.ts",
+  "author": "Xingwang Liao <kuoruan@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/kuoruan/es-packages/tree/master/packages/webp-supported#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuoruan/es-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kuoruan/es-packages/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.7.2",
+    "rollup-plugin-typescript2": "^0.27.0",
+    "typescript": "^3.8.3"
+  }
+}
