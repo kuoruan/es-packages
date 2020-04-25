@@ -2,20 +2,36 @@
 
 A util for conditionally joining classNames together
 
+## Install
+
+``` sh
+$ npm install --save @kuoruan/class-names
+```
+
+Or with Yarn
+
+``` sh
+$ yarn add @kuoruan/class-names
+```
+
 ## Usage
 
 ```javascript
-classNames('foo', 'bar'); // => 'foo bar'
-classNames('foo', { bar: true }); // => 'foo bar'
-classNames({ 'foo-bar': true }); // => 'foo-bar'
-classNames({ 'foo-bar': false }); // => ''
-classNames({ foo: true }, { bar: true }); // => 'foo bar'
-classNames({ foo: true, bar: true }); // => 'foo bar'
+import ClassNames from "@kuoruan/class-names";
+
+ClassNames('foo', 'bar'); // => 'foo bar'
+ClassNames('foo', { bar: true }); // => 'foo bar'
+ClassNames({ 'foo-bar': true }); // => 'foo-bar'
+ClassNames({ 'foo-bar': false }); // => ''
+ClassNames({ foo: true }, { bar: true }); // => 'foo bar'
+ClassNames({ foo: true, bar: true }); // => 'foo bar'
 ```
 
 With arrays:
 
 ```javascript
-var arr = ['b', { c: true, d: false }];
-classNames('a', arr); // => 'a b c'
+import ClassNames from "@kuoruan/class-names";
+
+const arr = ['b', { c: true, d: false }];
+ClassNames('a', arr); // => 'a b c'
 ```
