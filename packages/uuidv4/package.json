@@ -16,6 +16,19 @@
   "bugs": {
     "url": "https://github.com/kuoruan/es-packages/issues"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "uuid",
+    "uuidv4",
+    "guid",
+    "generate",
+    "create",
+    "typescript"
+  ],
   "publishConfig": {
     "access": "public"
   },
