@@ -1,7 +1,7 @@
 {
   "name": "@kuoruan/webp-supported",
   "version": "1.0.0",
-  "description": "Detect whether the browser supports webp",
+  "description": "Detect whether the browser supports WebP",
   "main": "dist/webp-supported.cjs.js",
   "module": "dist/webp-supported.es.js",
   "jsnext:main": "dist/webp-supported.es.js",
@@ -16,6 +16,18 @@
   "bugs": {
     "url": "https://github.com/kuoruan/es-packages/issues"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "WebP",
+    "support",
+    "image",
+    "fallback",
+    "typescript"
+  ],
   "publishConfig": {
     "access": "public"
   },
