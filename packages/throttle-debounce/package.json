@@ -1,6 +1,6 @@
 {
   "name": "@kuoruan/throttle-debounce",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Typescript throttle and debounce",
   "main": "dist/throttle-debounce.cjs.js",
   "module": "dist/throttle-debounce.es.js",
