@@ -34,7 +34,7 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-    "rollup": "^2.0.0",
+    "rollup": "^2.7.2",
     "rollup-plugin-typescript2": "^0.27.0",
     "typescript": "^3.8.3"
   }
