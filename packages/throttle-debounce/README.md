@@ -5,13 +5,13 @@ Typescript version of throttle and debounce function.
 ## Install
 
 ``` sh
-npm install --save @kuoruan/throttle-debounce
+$ npm install --save @kuoruan/throttle-debounce
 ```
 
 Or with Yarn
 
 ``` sh
-yarn add @kuoruan/throttle-debounce
+$ yarn add @kuoruan/throttle-debounce
 ```
 
 ## Useage
