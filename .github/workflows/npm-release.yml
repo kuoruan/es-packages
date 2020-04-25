@@ -1,0 +1,78 @@
+name: Node.js Build and Publish
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    name: Build and Publish to ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: NPM
+            registry-url: 'https://registry.npmjs.org/'
+            token: ${{ secrets.NPM_TOKEN }}
+          - target: GitHub
+            registry-url: https://npm.pkg.github.com/
+            token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: ${{ matrix.registry-url }}
+          scope: '@kuoruan'
+      
+      - id: get_tag
+        name: Get tag
+        run: |
+          echo "::set-output name=tag::${GITHUB_REF/refs\/tags\//}"
+      
+      - id: get_info
+        name: Get release info
+        run: |
+          version="$(echo "${{ steps.get_tag.outputs.tag }}" | sed -n 's/^.*-v\(.\{1,\}\)$/\1/p')"
+          package="$(echo "${{ steps.get_tag.outputs.tag }}" | sed "s/-v$version$//")"
+
+          echo "::set-output name=version::$version"
+          echo "::set-output name=package::$package"
+
+      - name: Check package
+        run: |
+          if [ -z "${{ steps.get_info.outputs.package }}" ] ; then
+            echo "Can't get release package name."
+            exit 1
+          fi
+
+          folder="${{ github.workspace }}/packages/${{ steps.get_info.outputs.package }}"
+          if [ ! -d "$folder" ] ; then
+            echo "Package folder not found."
+            exit 1
+          fi
+
+          cd "$folder"
+
+          package_version="$(jq -r '.version' package.json 2>/dev/null)"
+          if [ "x${{ steps.get_info.outputs.version }}" != "x$package_version" ] ; then
+            echo "Package version mismatch."
+            exit 1
+          fi
+
+          if [ ! -f "LICENSE" ] && [ -f "${{ github.workspace }}/LICENSE" ] ; then
+            cp "${{ github.workspace }}/LICENSE" .
+          fi
+      
+      - name: Build and publish
+        run: |
+          yarn install
+          yarn build
+          yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ matrix.token }}
