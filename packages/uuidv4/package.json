@@ -1,0 +1,30 @@
+{
+  "name": "@kuoruan/uuidv4",
+  "version": "1.0.0",
+  "description": "A simple util to generate UUIDv4",
+  "main": "dist/uuidv4.cjs.js",
+  "module": "dist/uuidv4.es.js",
+  "jsnext:main": "dist/uuidv4.es.js",
+  "types": "dist/index.d.ts",
+  "author": "Xingwang Liao <kuoruan@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/kuoruan/es-packages/tree/master/packages/uuidv4#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuoruan/es-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kuoruan/es-packages/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.7.2",
+    "rollup-plugin-typescript2": "^0.27.0",
+    "typescript": "^3.8.3"
+  }
+}
