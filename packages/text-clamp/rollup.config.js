@@ -16,9 +16,15 @@ export default {
     },
     {
       name: "TextClamp",
-      file: pkg.browser,
-      format: "iife",
-      plugins: [terser()],
+      file: pkg["umd:main"],
+      format: "umd",
+      plugins: [
+        terser({
+          output: {
+            comments: false,
+          },
+        }),
+      ],
     },
   ],
   external: [
