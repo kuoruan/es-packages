@@ -25,6 +25,10 @@ export default function TextClamp(
   el: HTMLElement,
   options?: number | string | Options
 ): void {
+  if (!el) {
+    throw new TypeError("invalid element.");
+  }
+
   if (typeof options === "number" || typeof options === "string") {
     options = {
       clamp: options,
