@@ -1,7 +1,7 @@
 {
   "name": "@kuoruan/text-clamp",
   "version": "1.0.0",
-  "description": "Detect whether the browser supports WebP",
+  "description": "Clamps an HTML element by adding ellipsis to it.",
   "main": "dist/text-clamp.cjs.js",
   "module": "dist/text-clamp.es.js",
   "jsnext:main": "dist/text-clamp.es.js",
