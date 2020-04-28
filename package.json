@@ -4,6 +4,7 @@
   "description": "ES packages",
   "author": "Xingwang Liao <kuoruan@gmail.com>",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "lint": "eslint '*/**/*.{js,jsx,ts,tsx}' --quiet --fix"
   },
