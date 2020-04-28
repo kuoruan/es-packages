@@ -1,0 +1,44 @@
+{
+  "name": "@kuoruan/text-clamp",
+  "version": "1.0.0",
+  "description": "Detect whether the browser supports WebP",
+  "main": "dist/text-clamp.cjs.js",
+  "module": "dist/text-clamp.es.js",
+  "jsnext:main": "dist/text-clamp.es.js",
+  "browser": "dist/text-clamp.iife.js",
+  "types": "dist/index.d.ts",
+  "author": "Xingwang Liao <kuoruan@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/kuoruan/es-packages/tree/master/packages/text-clamp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuoruan/es-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kuoruan/es-packages/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "text",
+    "clamp",
+    "line-clamp",
+    "truncate",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^2.7.3",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-typescript2": "^0.27.0",
+    "typescript": "^3.8.3"
+  }
+}
