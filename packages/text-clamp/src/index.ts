@@ -25,7 +25,7 @@ export default function TextClamp(
   el: HTMLElement,
   options?: number | string | Options
 ): void {
-  if (!el) {
+  if (!el || !el.ownerDocument) {
     throw new TypeError("invalid element.");
   }
 
@@ -66,7 +66,7 @@ export default function TextClamp(
 
       elementStyleHeight = opt.clamp;
     } else if (opt.clamp.indexOf("rem") > -1) {
-      const rfts = computedStyle(document.documentElement, "font-size");
+      const rfts = computedStyle(el.ownerDocument.documentElement, "font-size");
 
       const elHeight = Math.round(parseFloat(opt.clamp) * parseFloat(rfts));
 

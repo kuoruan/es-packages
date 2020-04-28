@@ -4,7 +4,7 @@
  * @param el The element to compute.
  */
 export function computedStyle(el: HTMLElement, prop: string): string {
-  return window.getComputedStyle(el).getPropertyValue(prop);
+  return getComputedStyle(el).getPropertyValue(prop);
 }
 
 /**
