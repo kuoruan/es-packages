@@ -49,7 +49,7 @@ type Options = {
   animate?: boolean | number;
   truncationChar?: string;
   truncationHTML?: string;
-  onTruncated?: OnTruncatedCallback;
+  onClamped?: onClampedCallback;
 };
 ```
 
