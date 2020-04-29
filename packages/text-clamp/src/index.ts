@@ -9,9 +9,9 @@ import {
  * Callback when element truncated
  */
 export type OnClampedCallback = (
-  el: HTMLElement, // The element.
-  clampValue: number, // Clamped lines
-  maxHeight: number // Max height of the element
+  el: HTMLElement,
+  clampValue: number,
+  maxHeight: number
 ) => void;
 
 /**
