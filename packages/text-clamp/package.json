@@ -1,6 +1,6 @@
 {
   "name": "@kuoruan/text-clamp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Clamps an HTML element by adding ellipsis to it.",
   "main": "dist/text-clamp.cjs.js",
   "module": "dist/text-clamp.es.js",
