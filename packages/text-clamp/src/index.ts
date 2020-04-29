@@ -5,6 +5,18 @@ import {
   getMaxLines,
 } from "./utils";
 
+/**
+ * Callback when element truncated
+ */
+export type OnClampedCallback = (
+  el: HTMLElement, // The element.
+  clampValue: number, // Clamped lines
+  maxHeight: number // Max height of the element
+) => void;
+
+/**
+ * Clamp options.
+ */
 export type Options = {
   clamp?: number | string | "auto";
   useNativeClamp?: boolean;
@@ -12,6 +24,7 @@ export type Options = {
   animate?: boolean | number;
   truncationChar?: string;
   truncationHTML?: string;
+  onClamped?: OnClampedCallback;
 };
 
 /**
@@ -45,39 +58,46 @@ export default function TextClamp(
     animate: options?.animate ?? false,
     truncationChar: options?.truncationChar ?? "…",
     truncationHTML: options?.truncationHTML ?? "",
+    onClamped:
+      typeof options?.onClamped === "function" ? options.onClamped : () => {},
   };
 
-  let clampValue: number;
+  let clampValue: number,
+    maxHeight = -1;
 
-  let elementStyleHeight: string = "";
+  let styleHeightValue = "";
 
   if (opt.clamp === "auto") {
     clampValue = getMaxLines(el);
   } else if (typeof opt.clamp === "string") {
     if (opt.clamp.indexOf("px") > -1) {
-      clampValue = getMaxLines(el, parseFloat(opt.clamp));
+      maxHeight = parseInt(opt.clamp);
+      clampValue = getMaxLines(el, maxHeight);
 
-      elementStyleHeight = opt.clamp;
+      styleHeightValue = opt.clamp;
     } else if (opt.clamp.indexOf("em") > -1) {
       const fts = computedStyle(el, "font-size");
 
-      const elHeight = Math.round(parseFloat(opt.clamp) * parseFloat(fts));
-      clampValue = getMaxLines(el, elHeight);
+      maxHeight = Math.floor(parseFloat(opt.clamp) * parseFloat(fts));
+      clampValue = getMaxLines(el, maxHeight);
 
-      elementStyleHeight = opt.clamp;
+      styleHeightValue = opt.clamp;
     } else if (opt.clamp.indexOf("rem") > -1) {
       const rfts = computedStyle(el.ownerDocument.documentElement, "font-size");
 
-      const elHeight = Math.round(parseFloat(opt.clamp) * parseFloat(rfts));
+      maxHeight = Math.floor(parseFloat(opt.clamp) * parseFloat(rfts));
+      clampValue = getMaxLines(el, maxHeight);
 
-      clampValue = getMaxLines(el, elHeight);
-
-      elementStyleHeight = opt.clamp;
+      styleHeightValue = opt.clamp;
     } else {
-      clampValue = getMaxLines(el, parseFloat(opt.clamp));
+      clampValue = parseInt(opt.clamp);
     }
   } else {
     clampValue = opt.clamp;
+  }
+
+  if (maxHeight < 0) {
+    maxHeight = getMaxHeight(el, clampValue);
   }
 
   if (opt.useNativeClamp && !opt.truncationHTML) {
@@ -87,19 +107,28 @@ export default function TextClamp(
     el.style.display = "-webkit-box";
     el.style.webkitLineClamp = String(clampValue);
 
-    if (elementStyleHeight) {
-      el.style.height = elementStyleHeight;
+    if (styleHeightValue) {
+      el.style.height = styleHeightValue;
     }
   } else {
-    const maxHeight = getMaxHeight(el, clampValue);
-
     if (maxHeight <= el.clientHeight) {
-      truncate(el, maxHeight, {
-        splitOnChars: opt.splitOnChars,
-        animate: opt.animate,
-        truncationChar: opt.truncationChar,
-        truncationHTML: opt.truncationHTML,
-      });
+      truncate(
+        el,
+        maxHeight,
+        {
+          splitOnChars: opt.splitOnChars,
+          animate: opt.animate,
+          truncationChar: opt.truncationChar,
+          truncationHTML: opt.truncationHTML,
+        },
+        function () {
+          if (styleHeightValue) {
+            el.style.height = styleHeightValue;
+          }
+
+          opt.onClamped(el, clampValue, maxHeight);
+        }
+      );
     }
   }
 }
@@ -110,21 +139,24 @@ function truncate(
   opts: Pick<
     Required<Options>,
     "splitOnChars" | "animate" | "truncationChar" | "truncationHTML"
-  >
+  >,
+  callback: Function
 ): void {
   const doc = el.ownerDocument;
-  if (!doc) return;
+  if (!doc) {
+    callback();
+    return;
+  }
 
   let splitChars: string[] = [...opts.splitOnChars],
     splitChar: string = "",
     chunks: string[] | null = null;
 
-  const doTruncate: (target: Node | null) => ReturnType<typeof truncate> = (
-    target
-  ) => {
+  const doTruncate = (target: Node | null) => {
     let nodeValue: string | null;
 
     if (!target || !(nodeValue = target.nodeValue) || !maxHeight) {
+      callback();
       return;
     }
 
@@ -177,6 +209,7 @@ function truncate(
           chunks = null;
         } else {
           // Finished!
+          callback();
           return;
         }
       }
@@ -222,7 +255,7 @@ function truncate(
     }
   };
 
-  return doTruncate(getLastValidTextNode(el));
+  doTruncate(getLastValidTextNode(el));
 }
 
 function getLastValidTextNode(el: Element): Node | null {
