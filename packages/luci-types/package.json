@@ -1,0 +1,28 @@
+{
+  "name": "@kuoruan/luci-types",
+  "version": "1.0.0",
+  "description": "Typescript declaration files for OpenWrt LuCI2.",
+  "main": "",
+  "types": "index.d.ts",
+  "author": "Xingwang Liao <kuoruan@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/kuoruan/es-packages/tree/master/packages/luci-types#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuoruan/es-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kuoruan/es-packages/issues"
+  },
+  "files": [
+    "*.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "true"
+  }
+}
