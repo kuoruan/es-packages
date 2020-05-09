@@ -38,6 +38,14 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: "packages/**/*.d.ts",
+      rules: {
+        "import/default": "off",
+      },
+    },
+  ],
   plugins: ["@typescript-eslint", "prettier", "import"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
