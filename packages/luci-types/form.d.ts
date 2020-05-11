@@ -1,3 +1,8 @@
+// Type definitions for LuCI.form
+// Documentation: http://openwrt.github.io/luci/jsapi/LuCI.form.html
+// Definitions by: Xingwang Liao <https://github.com/kuoruan>
+// TypeScript Version: 3.8
+
 import baseclass from "./baseclass";
 
 export as namespace form;
@@ -158,7 +163,7 @@ declare namespace form {
     show_hidden: boolean;
   }
 
-  class FlagValue extends Value<number> {
+  class Flag extends Value<number> {
     disabled: number;
 
     enabled: number;

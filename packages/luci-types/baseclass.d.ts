@@ -1,9 +1,19 @@
+// Type definitions for LuCI.baseclass
+// Documentation: http://openwrt.github.io/luci/jsapi/LuCI.baseclass.html
+// Definitions by: Xingwang Liao <https://github.com/kuoruan>
+// TypeScript Version: 3.8
+
 export as namespace baseclass;
 export = baseclass;
 
+/**
+ * `LuCI.baseclass` is the abstract base class all LuCI classes inherit from.
+ *
+ * It provides simple means to create subclasses of given classes and implements prototypal inheritance.
+ */
 declare class baseclass {
   /**
-   * Extends this base class with the properties described in properties and returns a new subclassed Class instance
+   * Extends this base class with the properties described in `properties` and returns a new subclassed Class instance
    *
    * @param properties - An object describing the properties to add to the new subclass.
    *
