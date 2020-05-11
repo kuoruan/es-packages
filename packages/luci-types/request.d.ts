@@ -3,7 +3,6 @@
 // Definitions by: Xingwang Liao <https://github.com/kuoruan>
 // TypeScript Version: 3.8
 
-import LuCI from "./luci";
 import P from "./poll";
 
 export as namespace request;

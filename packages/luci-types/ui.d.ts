@@ -1,9 +1,16 @@
+// Type definitions for LuCI.ui
+// Documentation: http://openwrt.github.io/luci/jsapi/LuCI.ui.html
+// Definitions by: Xingwang Liao <https://github.com/kuoruan>
+// TypeScript Version: 3.8
+
 import baseclass from "./baseclass";
-import uci from "./uci";
 
 export as namespace ui;
 export = ui;
 
+/**
+ * Provides high level UI helper functionality. To import the class in views, use `'require ui'`, to import it in external JavaScript, use `L.require("ui").then(...)`.
+ */
 declare namespace ui {
   function addNotification(
     title: string | null,
@@ -18,6 +25,38 @@ declare namespace ui {
     vfunc?: Function,
     events?: string
   ): Function;
+
+  function awaitReconnect(...hosts: string[]): void;
+
+  function createHandlerFn(
+    ctx: any,
+    fn: Function | string,
+    ...extra_args: any[]
+  ): Function | null;
+
+  function hideIndicator(id: string): boolean;
+
+  function hideModal(): void;
+
+  function instantiateView(path: string): Promise<LuCI.view>;
+
+  function itemlist(node: Node, items: any[], separators?: any | any[]): Node;
+
+  function pingDevice(proto: string, host: string): Promise<Event>;
+
+  function showIndicator(
+    id: string,
+    label: string,
+    handler?: Function,
+    style?: "active" | "inactive"
+  ): boolean;
+
+  function showModal(title: string, contents: any, classes: string): Node;
+
+  function uploadFile(
+    path: string,
+    progessStatusNode?: Node
+  ): Promise<FileUploadReply>;
 
   class AbstractElement extends baseclass {
     getValue(): string | string[] | null;
@@ -73,7 +112,7 @@ declare namespace ui {
      * @param changes - The UCI changeset to count.
      */
     function renderChangeIndicator(changes: {
-      [key: string]: uci.ChangeRecord[];
+      [key: string]: LuCI.uci.ChangeRecord[];
     }): void;
 
     /**
@@ -356,4 +395,26 @@ declare namespace ui {
       placeholder: string;
     }
   }
+
+  type FileUploadReply = {
+    /**
+     * Name of the uploaded file without directory components
+     */
+    name: string;
+
+    /**
+     * Size of the uploaded file in bytes
+     */
+    size: number;
+
+    /**
+     * The MD5 checksum of the received file data
+     */
+    checksum: string;
+
+    /**
+     * The SHA256 checksum of the received file data
+     */
+    sha256sum: string;
+  };
 }

@@ -12,6 +12,7 @@ import P from "./poll";
 import R from "./request";
 import RPC from "./rpc";
 import S from "./session";
+import UCI from "./uci";
 import U from "./ui";
 import V from "./view";
 import XHR from "./xhr";
@@ -447,6 +448,7 @@ declare namespace LuCI {
   export import request = R;
   export import rpc = RPC;
   export import session = S;
+  export import uci = UCI;
   export import ui = U;
   export import view = V;
   export import xhr = XHR;

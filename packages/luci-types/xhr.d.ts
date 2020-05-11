@@ -1,3 +1,8 @@
+// Type definitions for LuCI.xhr
+// Documentation: http://openwrt.github.io/luci/jsapi/LuCI.xhr.html
+// Definitions by: Xingwang Liao <https://github.com/kuoruan>
+// TypeScript Version: 3.8
+
 import LuCI from "./luci";
 import Request from "./request";
 
