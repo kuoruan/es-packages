@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     "no-var": "error",
     "prefer-const": "error",
+    "tsdoc/syntax": "warn",
     "sort-imports": [
       "error",
       {
@@ -46,7 +47,7 @@ module.exports = {
       },
     },
   ],
-  plugins: ["@typescript-eslint", "prettier", "import"],
+  plugins: ["@typescript-eslint", "prettier", "import", "tsdoc"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     sourceType: "module",
