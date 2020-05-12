@@ -16,6 +16,7 @@ import UCI from "./uci";
 import U from "./ui";
 import V from "./view";
 import XHR from "./xhr";
+import VA from "./validation";
 
 export as namespace LuCI;
 export = LuCI;
@@ -450,6 +451,7 @@ declare namespace LuCI {
   export import session = S;
   export import uci = UCI;
   export import ui = U;
+  export import validation = VA;
   export import view = V;
   export import xhr = XHR;
 

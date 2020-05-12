@@ -16,6 +16,8 @@ export import session = require("./session");
 export import uci = require("./uci");
 export import ui = require("./ui");
 export import XHR = require("./xhr");
+export import view = require("./view");
+export import validation = require("./validation");
 
 declare global {
   interface String {

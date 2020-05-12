@@ -85,7 +85,7 @@ declare namespace form {
   }
 
   abstract class AbstractValue<T = string> extends AbstractElement {
-    datatype: string;
+    datatype: LuCI.validation.DataTypes;
 
     default: T;
 
