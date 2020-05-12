@@ -24,6 +24,6 @@ declare global {
 
   function _(s: string): string;
 
-  const L: typeof LuCI;
+  const L: LuCI;
   const E: typeof LuCI.dom.create;
 }

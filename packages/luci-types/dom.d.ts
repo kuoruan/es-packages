@@ -104,13 +104,13 @@ declare namespace dom {
    *
    * @returns Returns the newly created `Node`.
    */
-  function create<T extends Node, E extends Node = Node>(
-    html: E | string,
+  function create<T extends Node = Node>(
+    html: Node | Node[] | string,
     attr?: { [key: string]: any },
     data?: any
   ): T;
-  function create<T extends Node, E extends Node = Node>(
-    html: E | string,
+  function create<T extends Node = Node>(
+    html: Node | Node[] | string,
     data?: any
   ): T;
 

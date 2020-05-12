@@ -8,14 +8,44 @@ import baseclass from "./baseclass";
 export as namespace view;
 export = view;
 
+interface IView<L = void> {
+  /**
+   * The load function is invoked before the view is rendered.
+   *
+   * The invocation of this function is wrapped by `Promise.resolve()` so it may return Promises if needed.
+   *
+   * The return value of the function (or the resolved values of the promise returned by it) will be passed as first argument to `render()`.
+   *
+   * This function is supposed to be overwritten by subclasses, the default implementation does nothing.
+   *
+   * @returns May return any value or a Promise resolving to any value.
+   */
+  load(): L | Promise<L>;
+
+  /**
+   * The render function is invoked after the `load()` function and responsible for setting up the view contents. It must return a DOM `Node` or `DocumentFragment` holding the contents to insert into the view area.
+   *
+   * The invocation of this function is wrapped by `Promise.resolve()` so it may return Promises if needed.
+   *
+   * The return value of the function (or the resolved values of the promise returned by it) will be inserted into the main content area using `dom.append()`.
+   *
+   * This function is supposed to be overwritten by subclasses, the default implementation does nothing.
+   *
+   * @param load_results - This function will receive the return value of the `view.load()` function as first argument.
+   *
+   * @returns Should return a DOM `Node` value or a `Promise` resolving to a `Node` value.
+   */
+  render(load_results: L | null): Node | Promise<Node>;
+}
+
 /**
  * The `view` class forms the basis of views and provides a standard set of methods to inherit from.
  */
-declare abstract class view<L = any> extends baseclass {
-  /**
-   * {@inheritDoc baseclass.extend}
-   */
-  static extend<view, T extends view>(properties: Partial<typeof view> & T): T;
+declare abstract class view extends baseclass implements IView<void> {
+  static extend<L = void, E = typeof view, T = { [key: string]: any }>(
+    this: E,
+    properties: IView<L> & Partial<E> & T
+  ): E & T;
 
   /**
    * Renders a standard page action footer if any of the `handleSave()`, `handleSaveApply()` or `handleReset()` functions are defined.
@@ -79,32 +109,8 @@ declare abstract class view<L = any> extends baseclass {
    */
   handleSaveApply(ev: Event): any | Promise<any>;
 
-  /**
-   * The load function is invoked before the view is rendered.
-   *
-   * The invocation of this function is wrapped by `Promise.resolve()` so it may return Promises if needed.
-   *
-   * The return value of the function (or the resolved values of the promise returned by it) will be passed as first argument to `render()`.
-   *
-   * This function is supposed to be overwritten by subclasses, the default implementation does nothing.
-   *
-   * @returns May return any value or a Promise resolving to any value.
-   */
-  abstract load(): L | Promise<L>;
+  abstract load(): void | Promise<void>;
 
-  /**
-   * The render function is invoked after the `load()` function and responsible for setting up the view contents. It must return a DOM `Node` or `DocumentFragment` holding the contents to insert into the view area.
-   *
-   * The invocation of this function is wrapped by `Promise.resolve()` so it may return Promises if needed.
-   *
-   * The return value of the function (or the resolved values of the promise returned by it) will be inserted into the main content area using `dom.append()`.
-   *
-   * This function is supposed to be overwritten by subclasses, the default implementation does nothing.
-   *
-   * @param load_results - This function will receive the return value of the `view.load()` function as first argument.
-   *
-   * @returns Should return a DOM `Node` value or a `Promise` resolving to a `Node` value.
-   */
-  abstract render(load_results: L | null): Node | Promise<Node>;
+  abstract render(load_results: void | null): Node | Promise<Node>;
 }
 declare namespace view {}

@@ -92,38 +92,38 @@ declare class XHR {
 
 declare namespace XHR {
   /**
-   * {@inheritdoc LuCI.get}
+   * {@inheritDoc LuCI.get}
    */
   const get: typeof LuCI.prototype.get;
 
   /**
-   * {@inheritdoc LuCI.post}
+   * {@inheritDoc LuCI.post}
    */
   const post: typeof LuCI.prototype.post;
 
   /**
-   * {@inheritdoc LuCI.poll}
+   * {@inheritDoc LuCI.poll}
    */
   const poll: typeof LuCI.prototype.poll;
 
   /**
-   * {@inheritdoc Request.poll.stop}
+   * {@inheritDoc Request.poll.stop}
    */
   const stop: typeof Request.poll.stop;
 
   /**
-   * {@inheritdoc Request.poll.stop}
+   * {@inheritDoc Request.poll.stop}
    */
   const halt: typeof Request.poll.stop;
 
   /**
    *
-   * {@inheritdoc Request.poll.start}
+   * {@inheritDoc Request.poll.start}
    */
   const run: typeof Request.poll.start;
 
   /**
-   * {@inheritdoc Request.poll.active}
+   * {@inheritDoc Request.poll.active}
    */
   const running: typeof Request.poll.active;
 }

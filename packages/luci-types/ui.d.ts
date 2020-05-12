@@ -78,12 +78,41 @@ declare namespace ui {
 
   namespace AbstractElement {
     interface InitOptions {
-      id: string;
-      name: string;
-      optional: boolean;
-      datatype: string;
-      validator: Function;
-      disabled: boolean;
+      /**
+       * Specifies the widget ID to use. It will be used as HTML `id` attribute on the toplevel widget DOM node.
+       */
+      id?: string;
+
+      /**
+       * Specifies the widget `name` which is set as HTML name attribute on the corresponding `<input>` element.
+       */
+      name?: string;
+
+      /**
+       * Specifies whether the input field allows empty values.
+       *
+       * @defaultValue true
+       */
+      optional?: boolean;
+
+      /**
+       * An expression describing the input data validation constraints. It defaults to `string` which will allow any value. See `LuCI.validation` for details on the expression format.
+       *
+       * @defaultValue string
+       */
+      datatype?: string;
+
+      /**
+       * Specifies a custom validator function which is invoked after the standard validation constraints are checked. The function should return `true` to accept the given input value. Any other return value type is converted to a string and treated as validation error message.
+       */
+      validator?: Function;
+
+      /**
+       * Specifies whether the widget should be rendered in disabled state (`true`) or not (`false`). Disabled widgets cannot be interacted with and are displayed in a slightly faded style.
+       *
+       * @defaultValue false
+       */
+      disabled?: boolean;
     }
   }
 
@@ -140,11 +169,24 @@ declare namespace ui {
 
   namespace CheckBox {
     interface InitOptions extends AbstractElement.InitOptions {
-      value_enabled: string;
+      /**
+       * Specifies the value corresponding to a checked checkbox.
+       *
+       * @defaultValue 1
+       */
+      value_enabled?: string;
 
-      value_disabled: string;
+      /**
+       * Specifies the value corresponding to an unchecked checkbox.
+       *
+       * @defaultValue 0
+       */
+      value_disabled?: string;
 
-      hiddenname: string;
+      /**
+       * Specifies the HTML `name` attribute of the hidden input backing the checkbox. This is a legacy property existing for compatibility reasons, it is required for HTML based form submissions.
+       */
+      hiddenname?: string;
     }
   }
 
@@ -158,11 +200,20 @@ declare namespace ui {
 
   namespace Combobox {
     interface InitOptions extends Dropdown.InitOptions {
-      multiple: boolean;
+      /**
+       * Since Comboboxes never allow selecting multiple values, this property is forcibly set to `false`.
+       */
+      multiple: false;
 
-      create: boolean;
+      /**
+       * Since Comboboxes always allow custom choice values, this property is forcibly set to `true`.
+       */
+      create: true;
 
-      optional: boolean;
+      /**
+       * Since Comboboxes are always optional, this property is forcibly set to `true`.
+       */
+      optional: true;
     }
   }
 
@@ -204,33 +255,33 @@ declare namespace ui {
 
   namespace Dropdown {
     interface InitOptions {
-      optional: boolean;
+      optional?: boolean;
 
-      multiple: boolean;
+      multiple?: boolean;
 
-      sort: boolean | string[];
+      sort?: boolean | string[];
 
-      select_placeholder: string;
+      select_placeholder?: string;
 
-      custom_placeholder: string;
+      custom_placeholder?: string;
 
-      create: boolean;
+      create?: boolean;
 
-      create_query: string;
+      create_query?: string;
 
-      create_template: string;
+      create_template?: string;
 
-      create_markup: string;
+      create_markup?: string;
 
-      display_items: number;
+      display_items?: number;
 
-      dropdown_items: number;
+      dropdown_items?: number;
 
-      placeholder: string;
+      placeholder?: string;
 
-      readonly: boolean;
+      readonly?: boolean;
 
-      maxlength: number;
+      maxlength?: number;
     }
   }
 
@@ -246,9 +297,19 @@ declare namespace ui {
 
   namespace DynamicList {
     interface InitOptions extends AbstractElement.InitOptions {
-      multiple: boolean;
+      /**
+       * Since dynamic lists never allow selecting multiple choices when adding another list item, this property is forcibly set to `false`.
+       *
+       * @defaultValue false
+       */
+      multiple: false;
 
-      optional: boolean;
+      /**
+       * Since dynamic lists use an embedded dropdown to present a list of predefined choice values, the dropdown must be made optional to allow it to remain unselected.
+       *
+       * @defaultValue true
+       */
+      optional?: boolean;
     }
   }
 
@@ -258,13 +319,33 @@ declare namespace ui {
 
   namespace FileUpload {
     interface InitOptions extends AbstractElement.InitOptions {
-      show_hidden: boolean;
+      /**
+       * Specifies whether hidden files should be displayed when browsing remote files. Note that this is not a security feature, hidden files are always present in the remote file listings received, this option merely controls whether they're displayed or not.
+       *
+       * @defaultValue false
+       */
+      show_hidden?: boolean;
 
-      enable_upload: boolean;
+      /**
+       * Specifies whether the widget allows the user to upload files. If set to `false`, only existing files may be selected. Note that this is not a security feature. Whether file upload requests are accepted remotely depends on the ACL setup for the current session. This option merely controls whether the upload controls are rendered or not.
+       *
+       * @defaultValue true
+       */
+      enable_upload?: boolean;
 
-      enable_remove: boolean;
+      /**
+       * Specifies whether the widget allows the user to delete remove files. If set to `false`, existing files may not be removed. Note that this is not a security feature. Whether file delete requests are accepted remotely depends on the ACL setup for the current session. This option merely controls whether the file remove controls are rendered or not.
+       *
+       * @defaultValue true
+       */
+      enable_remove?: boolean;
 
-      root_directory: string;
+      /**
+       * Specifies the remote directory the upload and file browsing actions take place in. Browsing to directories outside of the root directory is prevented by the widget. Note that this is not a security feature. Whether remote directories are browseable or not solely depends on the ACL setup for the current session.
+       *
+       * @defaultValue /etc/luci-uploads
+       */
+      root_directory?: string;
     }
   }
 
@@ -340,17 +421,17 @@ declare namespace ui {
 
   namespace Select {
     interface InitOptions extends AbstractElement.InitOptions {
-      multiple: boolean;
+      multiple?: boolean;
 
-      widget: string;
+      widget?: string;
 
-      orientation: string;
+      orientation?: string;
 
-      sort: boolean | string[];
+      sort?: boolean | string[];
 
-      size: number;
+      size?: number;
 
-      placeholder: string;
+      placeholder?: string;
     }
   }
 
@@ -366,17 +447,22 @@ declare namespace ui {
 
   namespace Textarea {
     interface InitOptions extends AbstractElement.InitOptions {
-      readonly: boolean;
+      /**
+       * Specifies whether the input widget should be rendered readonly.
+       *
+       * @defaultValue false
+       */
+      readonly?: boolean;
 
-      placeholder: string;
+      placeholder?: string;
 
-      monospace: boolean;
+      monospace?: boolean;
 
-      cols: number;
+      cols?: number;
 
-      rows: number;
+      rows?: number;
 
-      wrap: boolean;
+      wrap?: boolean;
     }
   }
 
@@ -386,13 +472,13 @@ declare namespace ui {
 
   namespace Textfield {
     interface InitOptions extends AbstractElement.InitOptions {
-      password: boolean;
+      password?: boolean;
 
-      readonly: boolean;
+      readonly?: boolean;
 
-      maxlength: number;
+      maxlength?: number;
 
-      placeholder: string;
+      placeholder?: string;
     }
   }
 

@@ -68,7 +68,7 @@ declare namespace form {
 
     load(): Promise<void>;
 
-    option<T>(
+    option<T = string>(
       optionclass: AbstractValue<T>,
       ...classargs: any[]
     ): AbstractValue<T>;
@@ -77,14 +77,14 @@ declare namespace form {
 
     tab(name: string, title: string, description: string): void;
 
-    taboption<T>(
+    taboption<T = string>(
       tabname: string,
       optionclass: AbstractValue<T>,
       ...classargs: any[]
     ): AbstractValue<T>;
   }
 
-  abstract class AbstractValue<T> extends AbstractElement {
+  abstract class AbstractValue<T = string> extends AbstractElement {
     datatype: string;
 
     default: T;
