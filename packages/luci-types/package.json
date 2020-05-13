@@ -16,8 +16,17 @@
   },
   "files": [
     "*.d.ts",
+    "tsconfig.json",
     "README.md",
     "LICENSE"
+  ],
+  "keywords": [
+    "LuCI",
+    "LuCI2",
+    "OpenWrt",
+    "declaration",
+    "luci-types",
+    "typescript"
   ],
   "publishConfig": {
     "access": "public"
