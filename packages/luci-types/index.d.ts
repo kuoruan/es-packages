@@ -15,9 +15,9 @@ export import rpc = require("./rpc");
 export import session = require("./session");
 export import uci = require("./uci");
 export import ui = require("./ui");
-export import XHR = require("./xhr");
-export import view = require("./view");
 export import validation = require("./validation");
+export import view = require("./view");
+export import XHR = require("./xhr");
 
 declare global {
   interface String {

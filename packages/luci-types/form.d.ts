@@ -48,20 +48,83 @@ declare namespace form {
    * This class is private and not directly accessible by user code.
    */
   abstract class AbstractElement extends baseclass {
-    append(element: AbstractElement): void;
+    /**
+     * Add another form element as children to this element.
+     *
+     * @param element - The form element to add.
+     */
+    append<T extends AbstractElement>(element: T): void;
 
+    /**
+     * Parse this elements form input.
+     *
+     * `The parse()` function recursively walks the form element tree and triggers input value reading and validation for each encountered element.
+     *
+     * Elements which are hidden due to unsatisified dependencies are skipped.
+     *
+     * @returns Returns a promise resolving once this element's value and the values of all child elements have been parsed. The returned promise is rejected if any parsed values are not meeting the validation constraints of their respective elements.
+     */
     parse(): Promise<void>;
 
+    /**
+     * Render the form element.
+     *
+     * The `render()` function recursively walks the form element tree and renders the markup for each element, returning the assembled DOM tree.
+     *
+     * @returns May return a DOM Node or a promise resolving to a DOM node containing the form element's markup, including the markup of any child elements.
+     */
     abstract render(): Node | Promise<Node>;
 
+    /**
+     * Strip any HTML tags from the given input string.
+     *
+     * @param input - The input string to clean.
+     *
+     * @returns The cleaned input string with HTML removes removed.
+     */
     stripTags(input: string): string;
 
+    /**
+     * Format the given named property as title string.
+     *
+     * This function looks up the given named property and formats its value suitable for use as element caption or description string. It also strips any HTML tags from the result.
+     *
+     * If the property value is a string, it is passed to `String.format()` along with any additional parameters passed to `titleFn()`.
+     *
+     * If the property value is a function, it is invoked with any additional `titleFn()` parameters as arguments and the obtained return value is converted to a string.
+     *
+     * In all other cases, `null` is returned.
+     *
+     * @param property - The name of the element property to use.
+     * @param fmt_args - repeatable. Extra values to format the title string with.
+     *
+     * @returns The formatted title string or `null` if the property did not exist or was neither a string nor a function.
+     */
     titleFn(property: string, ...fmt_args: any[]): string | null;
   }
 
+  /**
+   * The `AbstractSection` class serves as abstract base for the different form section styles implemented by `LuCI.form`. It provides the common logic for enumerating underlying configuration section instances, for registering form options and for handling tabs to segment child options.
+   *
+   * This class is private and not directly accessible by user code.
+   */
   abstract class AbstractSection extends AbstractElement {
+    /**
+     * Access the parent option container instance.
+     *
+     * In case this section is nested within an option element container, this property will hold a reference to the parent option instance.
+     *
+     * If this section is not nested, the property is `null`.
+     */
     readonly parentoption: AbstractValue<any>;
 
+    /**
+     * Enumerate the UCI section IDs covered by this form section element.
+     *
+     * @throws Throws an {@link InternalError} exception if the function is not implemented.
+     *
+     * @returns Returns an array of UCI section IDs covered by this form element. The sections will be rendered in the same order as the returned array.
+     */
     abstract cfgsections(): string[];
 
     abstract filter(section_id: string): boolean;

@@ -7,7 +7,13 @@ export as namespace validation;
 export = ValidatorFactory;
 
 declare class Validator {
-  constructor(field: Node, type: ValidatorFactory.DataTypes, optional: boolean, vfunc: Function, validatorFactory: typeof ValidatorFactory);
+  constructor(
+    field: Node,
+    type: ValidatorFactory.DataTypes,
+    optional: boolean,
+    vfunc: Function,
+    validatorFactory: typeof ValidatorFactory
+  );
 
   assert(condition: boolean, message: string): boolean;
 

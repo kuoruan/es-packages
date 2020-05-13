@@ -4,7 +4,6 @@
 // TypeScript Version: 3.8
 
 import baseclass from "./baseclass";
-import validation from "./validation";
 
 export as namespace ui;
 export = ui;
@@ -20,7 +19,7 @@ declare namespace ui {
    *
    * Additional CSS class names may be passed to influence the appearence of the banner. Valid values for the classes depend on the underlying theme.
    *
-   * @see {@link LuCI.dom.content}
+   * @remarks {@link LuCI.dom.content}
    *
    * @param title - The title of the notification banner. If `null`, no title element will be rendered.
    * @param contents - The contents to add to the notification banner. This should be a DOM node or a document fragment in most cases. The value is passed as-is to the `dom.content()` function - refer to its documentation for applicable values.
@@ -39,7 +38,7 @@ declare namespace ui {
    *
    * Compile the given type expression and optional validator function into a validation function and bind it to the specified input element events.
    *
-   * @see {@link LuCI.validation}
+   * @remarks {@link LuCI.validation}
    *
    * @param field - The DOM input element node to bind the validation constraints to.
    * @param type - The datatype specification to describe validation constraints. Refer to the `LuCI.validation` class documentation for details.
@@ -179,7 +178,7 @@ declare namespace ui {
    *
    * Additional CSS class names may be passed to influence the appearence of the dialog. Valid values for the classes depend on the underlying theme.
    *
-   * @see {@link LuCI.dom.content}
+   * @remarks {@link LuCI.dom.content}
    *
    * @param title - The title of the dialog. If `null`, no title element will be rendered.
    * @param contents - The contents to add to the modal dialog. This should be a DOM node or a document fragment in most cases. The value is passed as-is to the `dom.content()` function - refer to its documentation for applicable values.
@@ -187,7 +186,11 @@ declare namespace ui {
    *
    * @returns Returns a DOM Node representing the modal dialog element.
    */
-  function showModal(title: string | null, contents: any, ...classes: string[]): Node;
+  function showModal(
+    title: string | null,
+    contents: any,
+    ...classes: string[]
+  ): Node;
 
   /**
    * Display a modal file upload prompt.
@@ -439,101 +442,285 @@ declare namespace ui {
     interface InitOptions extends Dropdown.InitOptions {
       /**
        * Since Comboboxes never allow selecting multiple values, this property is forcibly set to `false`.
+       *
+       * @defaultValue false
        */
-      multiple: false;
+      multiple?: false;
 
       /**
        * Since Comboboxes always allow custom choice values, this property is forcibly set to `true`.
+       *
+       * @defaultValue true
        */
-      create: true;
+      create?: true;
 
       /**
        * Since Comboboxes are always optional, this property is forcibly set to `true`.
+       *
+       * @defaultValue true
        */
-      optional: true;
+      optional?: true;
     }
   }
 
+  /**
+   * The `ComboButton` class implements a button element which can be expanded into a dropdown to chose from a set of different action choices.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.ComboButton`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `ComboButton` property of the class instance value.
+   */
   class ComboButton extends Dropdown {
+    /**
+     * Instantiate a combo button widget offering multiple action choices.
+     *
+     * @param value - The initial input value(s).
+     * @param choices - Object containing the selectable choices of the widget. The object keys serve as values for the different choices while the values are used as choice labels.
+     * @param options - Object describing the widget specific options to initialize the button.
+     */
     constructor(
-      value: string | string[],
+      value: string | string[] | null,
       choices: { [key: string]: any },
-      options: ComboButton.InitOptions
+      options?: ComboButton.InitOptions
     );
   }
 
   namespace ComboButton {
+    /**
+     * ComboButtons support the same properties as `Dropdown.InitOptions` but enforce specific values for some properties and add aditional button specific properties.
+     */
     interface InitOptions extends Dropdown.InitOptions {
-      multiple: boolean;
+      /**
+       * Since ComboButtons never allow selecting multiple actions, this property is forcibly set to `false`.
+       *
+       * @defaultValue false
+       */
+      multiple?: false;
 
-      create: boolean;
+      /**
+       * Since ComboButtons never allow creating custom choices, this property is forcibly set to `false`.
+       *
+       * @defaultValue false
+       */
+      create?: false;
 
-      optional: boolean;
+      /**
+       * Since ComboButtons must always select one action, this property is forcibly set to `false`.
+       *
+       * @defaultValue false
+       */
+      optional?: false;
 
-      classes: { [key: string]: string };
+      /**
+       * Specifies a mapping of choice values to CSS class names. If an action choice is selected by the user and if a corresponding entry exists in the `classes` object, the class names corresponding to the selected value are set on the button element.
+       *
+       * This is useful to apply different button styles, such as colors, to the combined button depending on the selected action.
+       */
+      classes?: { [key: string]: string };
 
-      click: Function;
+      /**
+       * Specifies a handler function to invoke when the user clicks the button. This function will be called with the button DOM node as `this` context and receive the DOM click event as first as well as the selected action choice value as second argument.
+       */
+      click?: Function;
     }
   }
 
+  /**
+   * The `Dropdown` class implements a rich, stylable dropdown menu which supports non-text choice labels.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.Dropdown`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `Dropdown` property of the class instance value.
+   */
   class Dropdown extends AbstractElement {
+    /**
+     * Instantiate a rich dropdown choice widget.
+     *
+     * @param value - The initial input value(s).
+     * @param choices - Object containing the selectable choices of the widget. The object keys serve as values for the different choices while the values are used as choice labels.
+     * @param options - Object describing the widget specific options to initialize the dropdown.
+     */
     constructor(
-      value: string | string[],
+      value: string | string[] | null,
       choices: { [key: string]: any },
-      options: Dropdown.InitOptions
+      options?: Dropdown.InitOptions
     );
 
+    /**
+     * Add new choices to the dropdown menu.
+     *
+     * This function adds further choices to an existing dropdown menu, ignoring choice values which are already present.
+     *
+     * @param values - The choice values to add to the dropdown widget.
+     * @param labels - The choice label values to use when adding dropdown choices. If no label is found for a particular choice value, the value itself is used as label text. Choice labels may be any valid value accepted by `LuCI.dom#content`.
+     */
     addChoices(values: string[], labels: { [key: string]: any }): void;
 
-    clearChoices(reset_value: boolean): void;
+    /**
+     * Remove all existing choices from the dropdown menu.
+     *
+     * This function removes all preexisting dropdown choices from the widget, keeping only choices currently being selected unless `reset_values` is given, in which case all choices and deselected and removed.
+     *
+     * @param reset_value - If set to true, deselect and remove selected choices as well instead of keeping them.
+     */
+    clearChoices(reset_value?: boolean): void;
 
+    /**
+     * Close all open dropdown widgets in the current document.
+     */
     closeAllDropdowns(): void;
   }
 
   namespace Dropdown {
-    interface InitOptions {
+    interface InitOptions extends AbstractElement.InitOptions {
+      /**
+       * Specifies whether the dropdown selection is optional. In contrast to other widgets, the `optional` constraint of dropdowns works differently; instead of marking the widget invalid on empty values when set to `false`, the user is not allowed to deselect all choices.
+       *
+       * For single value dropdowns that means that no empty "please select" choice is offered and for multi value dropdowns, the last selected choice may not be deselected without selecting another choice first.
+       *
+       * @defaultValue true
+       */
       optional?: boolean;
 
+      /**
+       * Specifies whether multiple choice values may be selected. It defaults to `true` when an array is passed as input value to the constructor.
+       */
       multiple?: boolean;
 
+      /**
+       * Specifies if and how to sort choice values. If set to `true`, the choice values will be sorted alphabetically. If set to an array of strings, the choice sort order is derived from the array.
+       *
+       * @defaultValue false
+       */
       sort?: boolean | string[];
 
+      /**
+       * Specifies a placeholder text which is displayed when no choice is selected yet.
+       *
+       * @defaultValue `-- Please choose --`
+       */
       select_placeholder?: string;
 
+      /**
+       * Specifies a placeholder text which is displayed in the text input field allowing to enter custom choice values. Only applicable if the `create` option is set to `true`.
+       *
+       * @defaultValue `-- custom --`
+       */
       custom_placeholder?: string;
 
+      /**
+       * Specifies whether custom choices may be entered into the dropdown widget.
+       *
+       * @defaultValue false
+       */
       create?: boolean;
 
+      /**
+       * Specifies a CSS selector expression used to find the input element which is used to enter custom choice values. This should not normally be used except by widgets derived from the Dropdown class.
+       *
+       * @defaultValue .create-item-input
+       */
       create_query?: string;
 
+      /**
+       * Specifies a CSS selector expression used to find an HTML element serving as template for newly added custom choice values.
+       *
+       * Any `{{value}}` placeholder string within the template elements text content will be replaced by the user supplied choice value, the resulting string is parsed as HTML and appended to the end of the choice list. The template markup may specify one HTML element with a `data-label-placeholder` attribute which is replaced by a matching label value from the `choices` object or with the user supplied value itself in case `choices` contains no matching choice label.
+       *
+       * If the template element is not found or if no `create_template` selector expression is specified, the default markup for newly created elements is `<li data-value="{{value}}"><span data-label-placeholder="true" /></li>`.
+       *
+       * @defaultValue script[type="item-template"]
+       */
       create_template?: string;
 
+      /**
+       * This property allows specifying the markup for custom choices directly instead of referring to a template element through CSS selectors.
+       *
+       * Apart from that it works exactly like `create_template`.
+       */
       create_markup?: string;
 
+      /**
+       * Specifies the maximum amount of choice labels that should be shown in collapsed dropdown state before further selected choices are cut off.
+       *
+       * Only applicable when `multiple` is `true`.
+       *
+       * @defaultValue 3
+       */
       display_items?: number;
 
+      /**
+       * Specifies the maximum amount of choices that should be shown when the dropdown is open. If the amount of available choices exceeds this number, the dropdown area must be scrolled to reach further items.
+       *
+       * If set to `-1`, the dropdown menu will attempt to show all choice values and only resort to scrolling if the amount of choices exceeds the available screen space above and below the dropdown widget.
+       *
+       * @defaultValue -1
+       */
       dropdown_items?: number;
 
+      /**
+       * This property serves as a shortcut to set both `select_placeholder` and `custom_placeholder`. Either of these properties will fallback to `placeholder` if not specified.
+       */
       placeholder?: string;
 
+      /**
+       * Specifies whether the custom choice input field should be rendered readonly. Only applicable when `create` is `true`.
+       *
+       * @defaultValue false
+       */
       readonly?: boolean;
 
+      /**
+       * Specifies the HTML `maxlength` attribute to set on the custom choice `<input>` element. Note that this a legacy property that exists for compatibility reasons. It is usually better to `maxlength(N)` validation expression. Only applicable when `create` is `true`.
+       */
       maxlength?: number;
     }
   }
 
+  /**
+   * The `DynamicList` class implements a widget which allows the user to specify an arbitrary amount of input values, either from free formed text input or from a set of predefined choices.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.DynamicList`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `DynamicList` property of the class instance value.
+   */
   class DynamicList extends AbstractElement {
+    /**
+     * Instantiate a dynamic list widget.
+     *
+     * @param value - The initial input value(s).
+     * @param choices - Object containing the selectable choices of the widget. The object keys serve as values for the different choices while the values are used as choice labels. If omitted, no default choices are presented to the user, instead a plain text input field is rendered allowing the user to add arbitrary values to the dynamic list.
+     * @param options - Object describing the widget specific options to initialize the dynamic list.
+     */
     constructor(
-      value: string | string[],
-      choices: { [key: string]: any },
-      options: DynamicList.InitOptions
+      value: string | string[] | null,
+      choices?: { [key: string]: any },
+      options?: DynamicList.InitOptions
     );
 
+    /**
+     * Add new suggested choices to the dynamic list.
+     *
+     * This function adds further choices to an existing dynamic list, ignoring choice values which are already present.
+     *
+     * @param values - The choice values to add to the dynamic lists suggestion dropdown.
+     * @param labels - The choice label values to use when adding suggested choices. If no label is found for a particular choice value, the value itself is used as label text. Choice labels may be any valid value accepted by `LuCI.dom#content`.
+     */
     addChoices(values: string[], labels: { [key: string]: any }): void;
+
+    /**
+     * Remove all existing choices from the dynamic list.
+     *
+     * This function removes all preexisting suggested choices from the widget.
+     */
+    clearChoices(): void;
   }
 
   namespace DynamicList {
-    interface InitOptions extends AbstractElement.InitOptions {
+    /**
+     * In case choices are passed to the dynamic list contructor, the widget supports the same properties as `Dropdown.InitOptions` but enforces specific values for some dropdown properties.
+     */
+    interface InitOptions extends Dropdown.InitOptions {
       /**
        * Since dynamic lists never allow selecting multiple choices when adding another list item, this property is forcibly set to `false`.
        *
@@ -550,8 +737,24 @@ declare namespace ui {
     }
   }
 
+  /**
+   * The `FileUpload` class implements a widget which allows the user to upload, browse, select and delete files beneath a predefined remote directory.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.FileUpload`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `FileUpload` property of the class instance value.
+   */
   class FileUpload extends AbstractElement {
-    constructor(value: string | string[], options: FileUpload.InitOptions);
+    /**
+     * Instantiate a file upload widget.
+     *
+     * @param value - The initial input value.
+     * @param options - Object describing the widget specific options to initialize the file upload control.
+     */
+    constructor(
+      value: string | string[] | null,
+      options?: FileUpload.InitOptions
+    );
   }
 
   namespace FileUpload {
@@ -586,8 +789,24 @@ declare namespace ui {
     }
   }
 
+  /**
+   * The `Hiddenfield` class implements an HTML `<input type="hidden">` field which allows to store form data without exposing it to the user.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.Hiddenfield`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `Hiddenfield` property of the class instance value.
+   */
   class Hiddenfield extends AbstractElement {
-    constructor(value: string | string[], options: AbstractElement.InitOptions);
+    /**
+     * Instantiate a hidden input field widget.
+     *
+     * @param value - The initial input value.
+     * @param options - Object describing the widget specific options to initialize the hidden input.
+     */
+    constructor(
+      value: string | string[] | null,
+      options?: AbstractElement.InitOptions
+    );
   }
 
   /**
@@ -648,38 +867,116 @@ declare namespace ui {
     };
   }
 
+  /**
+   * The `Select` class implements either a traditional HTML `<select>` element or a group of checkboxes or radio buttons, depending on whether multiple values are enabled or not.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.Select`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `Select` property of the class instance value.
+   */
   class Select extends AbstractElement {
+    /**
+     * Instantiate a select dropdown or checkbox/radiobutton group.
+     *
+     * @param value - The initial input value(s).
+     * @param choices - Object containing the selectable choices of the widget. The object keys serve as values for the different choices while the values are used as choice labels.
+     * @param options - Object describing the widget specific options to initialize the inputs.
+     */
     constructor(
-      value: string | string[],
+      value: string | string[] | null,
       choices: { [key: string]: string },
-      options: Select.InitOptions
+      options?: Select.InitOptions
     );
   }
 
   namespace Select {
     interface InitOptions extends AbstractElement.InitOptions {
+      /**
+       * Specifies whether multiple choice values may be selected.
+       *
+       * @defaultValue false
+       */
       multiple?: boolean;
 
+      /**
+       * Specifies the kind of widget to render. May be either `select` or `individual`. When set to `select` an HTML `<select>` element will be used, otherwise a group of checkbox or radio button elements is created, depending on the value of the `multiple` option.
+       *
+       * @defaultValue select
+       */
       widget?: string;
 
+      /**
+       * Specifies whether checkbox / radio button groups should be rendered in a `horizontal` or `vertical` manner. Does not apply to the `select` widget type.
+       *
+       * @defaultValue horizontal
+       */
       orientation?: string;
 
+      /**
+       * Specifies if and how to sort choice values. If set to `true`, the choice values will be sorted alphabetically. If set to an array of strings, the choice sort order is derived from the array.
+       *
+       * @defaultValue false
+       */
       sort?: boolean | string[];
 
+      /**
+       * Specifies the HTML `size` attribute to set on the `<select>` element. Only applicable to the `select` widget type.
+       */
       size?: number;
 
+      /**
+       * Specifies a placeholder text which is displayed when no choice is selected yet. Only applicable to the `select` widget type.
+       *
+       * @defaultValue `-- Please choose --`
+       */
       placeholder?: string;
     }
   }
 
+  /**
+   * The `tabs` class handles tab menu groups used throughout the view area. It takes care of setting up tab groups, tracking their state and handling related events.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.tabs`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `tabs` property of the class instance value.
+   */
   class tabs extends AbstractElement {
+    /**
+     * Initializes a new tab group from the given tab pane collection.
+     *
+     * This function cycles through the given tab pane DOM nodes, extracts their tab IDs, titles and active states, renders a corresponding tab menu and prepends it to the tab panes common parent DOM node.
+     *
+     * The tab menu labels will be set to the value of the `data-tab-title` attribute of each corresponding pane. The last pane with the `data-tab-active` attribute set to `true` will be selected by default.
+     *
+     * If no pane is marked as active, the first one will be preselected.
+     *
+     * @param panes - A collection of tab panes to build a tab group menu for. May be a plain array of DOM nodes or a NodeList collection, such as the result of a `querySelectorAll()` call or the `.childNodes` property of a DOM node.
+     */
     initTabGroup(panes: Node[] | NodeList): void;
 
+    /**
+     * Checks whether the given tab pane node is empty.
+     *
+     * @param pane - The tab pane to check.
+     *
+     * @returns Returns `true` if the pane is empty, else `false`.
+     */
     isEmptyPane(pane: Node): boolean;
   }
 
+  /**
+   * The `Textarea` class implements a multiline text area input field.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.Textarea`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `Textarea` property of the class instance value.
+   */
   class Textarea extends AbstractElement {
-    constructor(value: string, options: Textarea.InitOptions);
+    /**
+     * Instantiate a textarea widget.
+     *
+     * @param value - The initial input value.
+     * @param options - Object describing the widget specific options to initialize the input.
+     */
+    constructor(value: string | null, options?: Textarea.InitOptions);
   }
 
   namespace Textarea {
@@ -691,30 +988,78 @@ declare namespace ui {
        */
       readonly?: boolean;
 
+      /**
+       * Specifies the HTML `placeholder` attribute which is displayed when the corresponding `<textarea>` element is empty.
+       */
       placeholder?: string;
 
+      /**
+       * Specifies whether a monospace font should be forced for the textarea contents.
+       *
+       * @defaultValue false
+       */
       monospace?: boolean;
 
+      /**
+       * Specifies the HTML `cols` attribute to set on the corresponding `<textarea>` element.
+       */
       cols?: number;
 
+      /**
+       * Specifies the HTML `rows` attribute to set on the corresponding `<textarea>` element.
+       */
       rows?: number;
 
+      /**
+       * Specifies whether the HTML `wrap` attribute should be set.
+       *
+       * @defaultValue false
+       */
       wrap?: boolean;
     }
   }
 
+  /**
+   * The `Textfield` class implements a standard single line text input field.
+   *
+   * UI widget instances are usually not supposed to be created by view code directly, instead they're implicitely created by `LuCI.form` when instantiating CBI forms.
+   *
+   * This class is automatically instantiated as part of `LuCI.ui`. To use it in views, use `'require ui'` and refer to `ui.Textfield`. To import it in external JavaScript, use `L.require("ui").then(...)` and access the `Textfield` property of the class instance value.
+   */
   class Textfield extends AbstractElement {
-    constructor(value: string, options: Textfield.InitOptions);
+    /**
+     * Instantiate a text input widget.
+     *
+     * @param value - The initial input value.
+     * @param options - Object describing the widget specific options to initialize the input.
+     */
+    constructor(value: string | null, options?: Textfield.InitOptions);
   }
 
   namespace Textfield {
     interface InitOptions extends AbstractElement.InitOptions {
+      /**
+       * Specifies whether the input should be rendered as concealed password field.
+       *
+       * @defaultValue false
+       */
       password?: boolean;
 
+      /**
+       * Specifies whether the input widget should be rendered readonly.
+       *
+       * @defaultValue false
+       */
       readonly?: boolean;
 
+      /**
+       * Specifies the HTML `maxlength` attribute to set on the corresponding `<input>` element. Note that this a legacy property that exists for compatibility reasons. It is usually better to `maxlength(N)` validation expression.
+       */
       maxlength?: number;
 
+      /**
+       * Specifies the HTML `placeholder` attribute which is displayed when the corresponding `<input>` element is empty.
+       */
       placeholder?: string;
     }
   }

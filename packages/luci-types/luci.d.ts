@@ -14,9 +14,9 @@ import RPC from "./rpc";
 import S from "./session";
 import UCI from "./uci";
 import U from "./ui";
+import VA from "./validation";
 import V from "./view";
 import XHR from "./xhr";
-import VA from "./validation";
 
 export as namespace LuCI;
 export = LuCI;
