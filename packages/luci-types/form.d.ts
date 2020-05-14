@@ -8,6 +8,8 @@ import baseclass from "./baseclass";
 export as namespace form;
 export = form;
 
+type Newable<T> = { new (...args: any[]): T };
+
 /**
    * The LuCI form class provides high level abstractions for creating creating UCI- or JSON backed configurations forms.
    *
@@ -138,7 +140,7 @@ declare namespace form {
      *
      * @returns Returns `true` when the given UCI section ID should be handled and `false` when it should be ignored.
      */
-    abstract filter(section_id: string): boolean;
+    filter(section_id: string): boolean;
 
     /**
      * Load the configuration covered by this section.
@@ -533,7 +535,10 @@ declare namespace form {
   /**
    * The `DummyValue` element wraps an `LuCI.ui.Hiddenfield` widget and renders the underlying UCI option or default value as readonly text.
    */
-  class ButtonValue<T> extends Value<T> {
+  class ButtonValue<S extends AbstractSection = AbstractSection> extends Value<
+    boolean | string,
+    S
+  > {
     /**
      * Override the button style class.
      *
@@ -573,7 +578,10 @@ declare namespace form {
   /**
    * The `DummyValue` element wraps an `LuCI.ui.Hiddenfield` widget and renders the underlying UCI option or default value as readonly text.
    */
-  class DummyValue<T> extends Value<T> {
+  class DummyValue<S extends AbstractSection = AbstractSection> extends Value<
+    string,
+    S
+  > {
     /**
      * Set an URL which is opened when clicking on the dummy value text.
      *
@@ -596,12 +604,18 @@ declare namespace form {
   /**
    * The `DynamicList` class represents a multi value widget allowing the user to enter multiple unique values, optionally selected from a set of predefined choices. It builds upon the `LuCI.ui.DynamicList` widget.
    */
-  class DynamicList<T> extends Value<T> {}
+  class DynamicList<S extends AbstractSection = AbstractSection> extends Value<
+    string | string[],
+    S
+  > {}
 
   /**
    * The `FileUpload` element wraps an `LuCI.ui.FileUpload` widget and offers the ability to browse, upload and select remote files.
    */
-  class FileUpload extends Value<string> {
+  class FileUpload<S extends AbstractSection = AbstractSection> extends Value<
+    string | string[],
+    S
+  > {
     /**
      * Toggle remote file delete functionality.
      *
@@ -645,7 +659,10 @@ declare namespace form {
     show_hidden: boolean;
   }
 
-  class Flag extends Value<number> {
+  class Flag<S extends AbstractSection = AbstractSection> extends Value<
+    number,
+    S
+  > {
     /**
      * Sets the input value to use for the checkbox unchecked state.
      *
@@ -661,15 +678,27 @@ declare namespace form {
     enabled: number;
   }
 
-  abstract class GridSection extends TableSection {
+  class GridSection extends TableSection {
     tab(name: string, title: string, description?: string): void;
   }
 
-  class HiddenValue<T = string> extends Value<T> {}
+  class HiddenValue<S extends AbstractSection = AbstractSection> extends Value<
+    string,
+    S
+  > {}
 
-  class JSONMap extends Map {}
+  class JSONMap extends Map {
+    constructor(
+      data: { [key: string]: any },
+      title?: string,
+      description?: string
+    );
+  }
 
-  class ListValue extends Value<string[]> {
+  class ListValue<S extends AbstractSection = AbstractSection> extends Value<
+    string[] | string,
+    S
+  > {
     size: number;
   }
 
@@ -686,11 +715,11 @@ declare namespace form {
 
     load(): Promise<void>;
 
-    lookupOption<T extends AbstractValue<any>>(
+    lookupOption<T extends Newable<AbstractValue>>(
       name_or_id: string,
-      section_id: string,
-      config: string
-    ): T[] | string[] | null;
+      section_id?: string,
+      config?: string
+    ): [T, string] | null;
 
     parse(): Promise<void>;
 
@@ -700,37 +729,54 @@ declare namespace form {
 
     save(cb: Function, silent: boolean): Promise<void>;
 
-    section<S extends AbstractSection = AbstractSection>(
-      sectionclass: S,
-      classargs: string
+    section<S extends AbstractSection>(
+      sectionclass: Newable<S>,
+      ...classargs: string[]
     ): S;
   }
 
-  class MultiValue extends DynamicList<string[]> {
+  class MultiValue<
+    S extends AbstractSection = AbstractSection
+  > extends DynamicList<S> {
     display_size: number;
 
     dropdown_size: number;
   }
 
-  abstract class NamedSection extends AbstractSection {}
+  class NamedSection extends AbstractSection {
+    addremove: boolean;
 
-  class SectionValue<
-    T = string,
-    S extends AbstractSection = AbstractSection,
-    E extends AbstractSection = AbstractSection
-  > extends Value<T, S> {
+    uciconfig: string;
+
     constructor(
       form: Map | JSONMap,
-      section: S,
+      section_id: string,
+      section_type: string,
+      title?: string,
+      description?: string
+    );
+
+    cfgsections(): string[];
+
+    render(): Node | Promise<Node>;
+  }
+
+  class SectionValue<
+    S extends AbstractSection = AbstractSection,
+    E extends AbstractSection = AbstractSection
+  > extends Value<string, S> {
+    constructor(
+      form: Map | JSONMap,
+      section: Newable<S>,
       option: string,
-      subsection_class: E,
+      subsection_class: Newable<E>,
       ...class_args: any[]
     );
 
     readonly subsection: E;
   }
 
-  abstract class TableSection extends TypedSection {
+  class TableSection extends TypedSection {
     extedit: string | Function;
 
     max_cols: number;
@@ -743,14 +789,17 @@ declare namespace form {
 
     sortable: boolean;
 
-    abstract addModalOptions(
+    addModalOptions(
       modalSection: NamedSection,
       section_id: string,
       ev: Event
     ): any | Promise<any>;
   }
 
-  class TextValue extends Value<string> {
+  class TextValue<S extends AbstractSection = AbstractSection> extends Value<
+    string,
+    S
+  > {
     cols: number;
 
     monospace: boolean;
@@ -760,7 +809,7 @@ declare namespace form {
     wrap: number;
   }
 
-  abstract class TypedSection extends AbstractSection {
+  class TypedSection extends AbstractSection {
     addbtntitle: string | Function;
 
     addremove: boolean;
@@ -771,20 +820,20 @@ declare namespace form {
 
     uciconfig: string;
 
-    render(): Node | Promise<Node>;
-
-    cfgsections(): string[];
-
     constructor(
       form: Map | JSONMap,
       section_type: string,
       title?: string,
       description?: string
     );
+
+    render(): Node | Promise<Node>;
+
+    cfgsections(): string[];
   }
 
   class Value<
-    T,
+    T = string,
     S extends AbstractSection = AbstractSection
   > extends AbstractValue<T> {
     password: boolean;
@@ -793,7 +842,7 @@ declare namespace form {
 
     constructor(
       form: Map | JSONMap,
-      section: S,
+      section: Newable<S>,
       option: string,
       title?: string,
       description?: string
