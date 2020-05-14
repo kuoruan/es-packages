@@ -17,7 +17,9 @@ declare namespace rpc {
    *
    * @returns Returns the given function value.
    */
-  function addInterceptor(interceptorFn: interceptorFn): interceptorFn;
+  function addInterceptor<T = any>(
+    interceptorFn: interceptorFn<T>
+  ): interceptorFn<T>;
 
   /**
    * Describes a remote RPC call procedure and returns a function implementing it.
@@ -26,7 +28,7 @@ declare namespace rpc {
    *
    * @returns Returns a new function implementing the method call described in `options`.
    */
-  function declare(options: DeclareOptions): invokeFn;
+  function declare<T = any>(options: DeclareOptions): invokeFn<T>;
 
   /**
    * Returns the current RPC base URL.
@@ -73,7 +75,7 @@ declare namespace rpc {
    *
    * @returns Returns `true` if the given function has been removed or `false` if it has not been found.
    */
-  function removeInterceptor(interceptorFn: interceptorFn): boolean;
+  function removeInterceptor<T = any>(interceptorFn: interceptorFn<T>): boolean;
 
   /**
    * Set the RPC base URL to use.
@@ -167,7 +169,7 @@ declare namespace rpc {
    *
    * @returns Interceptor functions may return a promise to defer response processing until some delayed work completed. Any values the returned promise resolves to are ignored. When the returned promise rejects with an error, the invocation function will fail too, forwarding the error to the caller.
    */
-  type interceptorFn = (msg: any, req: object) => any | Promise<any>;
+  type interceptorFn<T> = (msg: any, req: object) => T | Promise<T>;
 
   /**
    * The generated invocation function is returned by `rpc.declare()` and encapsulates a single RPC method call.
@@ -180,5 +182,5 @@ declare namespace rpc {
    *
    * @returns Returns a promise resolving to the result data of the remote `ubus` RPC method invocation, optionally substituted and filtered according to the `expect` and `filter` declarations.
    */
-  type invokeFn = (params: any) => Promise<any>;
+  type invokeFn<T> = (...params: any[]) => Promise<T>;
 }
