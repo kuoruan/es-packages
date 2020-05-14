@@ -28,7 +28,9 @@ declare namespace rpc {
    *
    * @returns Returns a new function implementing the method call described in `options`.
    */
-  function declare<T = any>(options: DeclareOptions): invokeFn<T>;
+  function declare<P extends any[] = any[], R = any>(
+    options: DeclareOptions<P, R>
+  ): invokeFn<P, R>;
 
   /**
    * Returns the current RPC base URL.
@@ -91,7 +93,7 @@ declare namespace rpc {
    */
   function setSessionID(sid: string): void;
 
-  type DeclareOptions = {
+  type DeclareOptions<P extends any[], R> = {
     /**
      * The name of the remote `ubus` object to invoke.
      */
@@ -132,7 +134,7 @@ declare namespace rpc {
     /**
      * Specfies an optional filter function which is invoked to transform the received reply data before it is returned to the caller.
      */
-    filter?: filterFn;
+    filter?: filterFn<P, R>;
 
     /**
      * If set to `true`, non-zero ubus call status codes are treated as fatal error and lead to the rejection of the call promise. The default behaviour is to resolve with the call return code value instead.
@@ -151,7 +153,11 @@ declare namespace rpc {
    *
    * @returns The return value of the filter function will be returned to the caller of the RPC method as-is.
    */
-  type filterFn = (data: any, args: any[], ...extraArgs: any[]) => any;
+  type filterFn<P extends any[], R> = (
+    data: any,
+    args: P,
+    ...extraArgs: any[]
+  ) => R;
 
   /**
    * Registered interceptor functions are invoked before the standard reply parsing and handling logic.
@@ -182,5 +188,5 @@ declare namespace rpc {
    *
    * @returns Returns a promise resolving to the result data of the remote `ubus` RPC method invocation, optionally substituted and filtered according to the `expect` and `filter` declarations.
    */
-  type invokeFn<T> = (...params: any[]) => Promise<T>;
+  type invokeFn<P extends any[], R> = (...params: P) => Promise<R>;
 }
