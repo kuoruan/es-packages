@@ -24,7 +24,7 @@ export = LuCI;
 /**
  * This is the LuCI base class. It is automatically instantiated and accessible using the global `L` variable.
  */
-declare class LuCI {
+declare class LuCI extends BC {
   constructor(env: object);
 
   /**

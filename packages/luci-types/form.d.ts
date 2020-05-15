@@ -8,8 +8,6 @@ import baseclass from "./baseclass";
 export as namespace form;
 export = form;
 
-type Newable<T> = { new (...args: any[]): T };
-
 /**
    * The LuCI form class provides high level abstractions for creating creating UCI- or JSON backed configurations forms.
    *
@@ -110,7 +108,7 @@ declare namespace form {
    *
    * This class is private and not directly accessible by user code.
    */
-  abstract class AbstractSection extends AbstractElement {
+  class AbstractSection extends AbstractElement {
     /**
      * Access the parent option container instance.
      *
@@ -127,7 +125,7 @@ declare namespace form {
      *
      * @returns Returns an array of UCI section IDs covered by this form element. The sections will be rendered in the same order as the returned array.
      */
-    abstract cfgsections(): string[];
+    cfgsections(): string[];
 
     /**
      * Filter UCI section IDs to render.
@@ -179,6 +177,8 @@ declare namespace form {
      */
     parse(): Promise<void>;
 
+    render(): Node | Promise<Node>;
+
     /**
      * Add an option tab to the section.
      *
@@ -220,7 +220,7 @@ declare namespace form {
    *
    * This class is private and not directly accessible by user code.
    */
-  abstract class AbstractValue<T = string> extends AbstractElement {
+  class AbstractValue<T = string> extends AbstractElement {
     /**
      * Specifies a datatype constraint expression to validate input values against. Refer to `LuCI.validation` for details on the format.
      *
@@ -492,6 +492,8 @@ declare namespace form {
      */
     remove(section_id: string): void;
 
+    render(): Node | Promise<Node>;
+
     /**
      * Obtain a textual input representation.
      *
@@ -517,7 +519,7 @@ declare namespace form {
      *
      * @returns The method shall return `true` to accept the given value. Any other return value is treated as failure, converted to a string and displayed as error message to the user.
      */
-    abstract validate(section_id: string, value: T): boolean | string | object;
+    validate(section_id: string, value: T): boolean | string | object;
 
     /**
      * Write the current input value into the configuration.
@@ -715,7 +717,7 @@ declare namespace form {
 
     load(): Promise<void>;
 
-    lookupOption<T extends Newable<AbstractValue>>(
+    lookupOption<T extends baseclass.Newable<AbstractValue>>(
       name_or_id: string,
       section_id?: string,
       config?: string
@@ -730,7 +732,7 @@ declare namespace form {
     save(cb: Function, silent: boolean): Promise<void>;
 
     section<S extends AbstractSection>(
-      sectionclass: Newable<S>,
+      sectionclass: baseclass.Newable<S>,
       ...classargs: string[]
     ): S;
   }
@@ -767,9 +769,9 @@ declare namespace form {
   > extends Value<string, S> {
     constructor(
       form: Map | JSONMap,
-      section: Newable<S>,
+      section: baseclass.Newable<S>,
       option: string,
-      subsection_class: Newable<E>,
+      subsection_class: baseclass.Newable<E>,
       ...class_args: any[]
     );
 
@@ -842,7 +844,7 @@ declare namespace form {
 
     constructor(
       form: Map | JSONMap,
-      section: Newable<S>,
+      section: baseclass.Newable<S>,
       option: string,
       title?: string,
       description?: string

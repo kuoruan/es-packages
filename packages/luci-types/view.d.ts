@@ -8,16 +8,17 @@ import baseclass from "./baseclass";
 export as namespace view;
 export = view;
 
-type Newable<T = {}> = new (...args: any[]) => T;
-
 /**
  * The `view` class forms the basis of views and provides a standard set of methods to inherit from.
  */
 declare class view<L = void> extends baseclass {
   static extend<E = void, P extends {} = {}, T extends baseclass = view<E>>(
-    this: Newable<T>,
-    properties: P & Partial<T> & ThisType<T & P>
-  ): P & T;
+    this: baseclass.Newable<T>,
+    properties: P &
+      Partial<T> &
+      baseclass.OverrideProps &
+      ThisType<T & P & baseclass.BaseProps>
+  ): P & T & baseclass.BaseProps;
 
   /**
    * Renders a standard page action footer if any of the `handleSave()`, `handleSaveApply()` or `handleReset()` functions are defined.
