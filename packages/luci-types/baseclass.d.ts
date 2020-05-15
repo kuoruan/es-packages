@@ -6,6 +6,8 @@
 export as namespace baseclass;
 export = baseclass;
 
+type Newable<T = {}> = new (...args: any) => T;
+
 /**
  * `LuCI.baseclass` is the abstract base class all LuCI classes inherit from.
  *
@@ -19,10 +21,10 @@ declare class baseclass {
    *
    * @returns Returns a new LuCI.baseclass sublassed from this class, extended by the given properties and with its prototype set to this base class to enable inheritance. The resulting value represents a class constructor and can be instantiated with `new`.
    */
-  static extend<E = typeof baseclass, T = { [key: string]: any }>(
-    this: E,
-    properties: Partial<E> & T
-  ): E & T;
+  static extend<P extends {} = {}, T extends baseclass = baseclass>(
+    this: Newable<T>,
+    properties: P & Partial<T> & ThisType<T & P>
+  ): P & T;
 
   /**
    * Calls the class constructor using `new` with the given argument array being passed as variadic parameters to the constructor.
