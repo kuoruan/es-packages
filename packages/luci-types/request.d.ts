@@ -72,10 +72,7 @@ declare namespace request {
    *
    * @returns The resulting HTTP response.
    */
-  function request(
-    target: string,
-    options?: request.RequestOptions
-  ): LuCI.response;
+  function request(target: string, options?: RequestOptions): LuCI.response;
 
   /**
    * Interceptor functions are invoked whenever an HTTP reply is received, in the order these functions have been registered.

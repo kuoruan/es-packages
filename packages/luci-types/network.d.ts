@@ -547,76 +547,280 @@ declare namespace network {
       device: Protocol | Device | WifiDevice | WifiNetwork | string
     ): boolean;
 
+    /**
+     * Checks whether this logical interface contains the given device object.
+     *
+     * @param device - The object or device name to check. In case the given argument is not a string, it is resolved though the `Network.getIfnameOf()` function.
+     *
+     * @returns Returns `true` when this logical interface contains the given network device or `false` if not.
+     */
     containsDevice(
       device: Protocol | Device | WifiDevice | WifiNetwork | string
     ): boolean;
 
+    /**
+     * Cleanup related configuration entries.
+     *
+     * This function will be invoked if an interface is about to be removed from the configuration and is responsible for performing any required cleanup tasks, such as unsetting uci entries in related configurations.
+     *
+     * It should be overwritten by protocol specific subclasses.
+     *
+     * @returns This function may return a promise which is awaited before the rest of the configuration is removed. Any non-promise return value and any resolved promise value is ignored. If the returned promise is rejected, the interface removal will be aborted.
+     */
     abstract deleteConfiguration(): any | Promise<any>;
 
+    /**
+     * Remove the given network device from the logical interface.
+     *
+     * @param device - The object or device name to remove from the logical interface. In case the given argument is not a string, it is resolved though the `Network.getIfnameOf()` function.
+     *
+     * @returns Returns `true` if the device name has been added or `false` if any argument was invalid, if the device was already part of the logical interface or if the logical interface is virtual.
+     */
     deleteDevice(
       device: Protocol | Device | WifiDevice | WifiNetwork | string
     ): boolean;
 
+    /**
+     * Read the given UCI option value of this network.
+     *
+     * @param opt - The UCI option name to read.
+     *
+     * @returns Returns the UCI option value or `null` if the requested option is not found.
+     */
     get(opt: string): string | string[] | null;
 
+    /**
+     * Returns the Linux network device associated with this logical interface.
+     *
+     * @returns Returns a `Network.Device` class instance representing the expected Linux network device according to the configuration.
+     */
     getDevice(): Device;
 
+    /**
+     * Returns a list of network sub-devices associated with this logical interface.
+     *
+     * @returns Returns an array of of `Network.Device` class instances representing the sub-devices attached to this logical interface or `null` if the logical interface does not support sub-devices, e.g. because it is virtual and not a bridge.
+     */
     getDevices(): Device[] | null;
 
+    /**
+     * Query the IPv6 DNS servers associated with the logical interface.
+     *
+     * @returns Returns an array of IPv6 DNS servers registered by the remote protocol backend.
+     */
     getDNS6Addrs(): string[];
 
+    /**
+     * Query the IPv4 DNS servers associated with the logical interface.
+     *
+     * @returns Returns an array of IPv4 DNS servers registered by the remote protocol backend.
+     */
     getDNSAddrs(): string[];
 
+    /**
+     * Query interface error messages published in `ubus` runtime state.
+     *
+     * Interface errors are emitted by remote protocol handlers if the setup of the underlying logical interface failed, e.g. due to bad configuration or network connectivity issues.
+     *
+     * This function will translate the found error codes to human readable messages using the descriptions registered by `Network.registerErrorCode()` and fall back to `"Unknown error (%s)"` where `%s` is replaced by the error code in case no translation can be found.
+     *
+     * @returns Returns an array of translated interface error messages.
+     */
     getErrors(): string[];
 
+    /**
+     * Get the logical interface expiry time in seconds.
+     *
+     * For protocols that have a concept of a lease, such as DHCP or DHCPv6, this function returns the remaining time in seconds until the lease expires.
+     *
+     * @returns Returns the amount of seconds until the lease expires or `-1` if it isn't applicable to the associated protocol.
+     */
     getExpiry(): number;
 
+    /**
+     * Query the gateway (nexthop) of the IPv6 default route associated with this logical interface.
+     *
+     * @returns Returns a string containing the IPv6 nexthop address of the associated default route or `null` if no default route was found.
+     */
     getGateway6Addr(): string;
 
+    /**
+     * Query the gateway (nexthop) of the default route associated with this logical interface.
+     *
+     * @returns Returns a string containing the IPv4 nexthop address of the associated default route or `null` if no default route was found.
+     */
     getGatewayAddr(): string;
 
+    /**
+     * Return a human readable description for the protcol, such as `Static address` or `DHCP client`.
+     *
+     * This function should be overwritten by subclasses.
+     *
+     * @returns Returns the description string.
+     */
     abstract getI18n(): string;
 
+    /**
+     * Get the associared Linux network device of this network.
+     *
+     * @returns Returns the name of the associated network device or `null` if it could not be determined.
+     */
     getIfname(): string | null;
 
+    /**
+     * Query the first (primary) IPv6 address of the logical interface.
+     *
+     * @returns Returns the primary IPv6 address registered by the protocol handler in CIDR notation or `null` if no IPv6 addresses were set.
+     */
     getIP6Addr(): string | null;
 
+    /**
+     * Query all IPv6 addresses of the logical interface.
+     *
+     * @returns Returns an array of IPv6 addresses in CIDR notation which have been registered by the protocol handler. The order of the resulting array follows the order of the addresses in `ubus` runtime information.
+     */
     getIP6Addrs(): string[];
 
+    /**
+     * Query the routed IPv6 prefix associated with the logical interface.
+     *
+     * @returns Returns the routed IPv6 prefix registered by the remote protocol handler or `null` if no prefix is present.
+     */
     getIP6Prefix(): string | null;
 
+    /**
+     * Query the first (primary) IPv4 address of the logical interface.
+     *
+     * @returns Returns the primary IPv4 address registered by the protocol handler or `null` if no IPv4 addresses were set.
+     */
     getIPAddr(): string | null;
 
+    /**
+     * Query all IPv4 addresses of the logical interface.
+     *
+     * @returns Returns an array of IPv4 addresses in CIDR notation which have been registered by the protocol handler. The order of the resulting array follows the order of the addresses in `ubus` runtime information.
+     */
     getIPAddrs(): string[];
 
+    /**
+     * Returns the layer 2 linux network device currently associated with this logical interface.
+     *
+     * @returns Returns a `Network.Device` class instance representing the Linux network device currently associated with the logical interface.
+     */
     getL2Device(): Device;
 
+    /**
+     * Returns the layer 3 linux network device currently associated with this logical interface.
+     *
+     * @returns Returns a `Network.Device` class instance representing the Linux network device currently associated with the logical interface.
+     */
     getL3Device(): Device;
 
+    /**
+     * Get the metric value of the logical interface.
+     *
+     * @returns Returns the current metric value used for device and network routes spawned by the associated logical interface.
+     */
     getMetric(): number;
 
+    /**
+     * Get the name of the associated logical interface.
+     *
+     * @returns Returns the logical interface name, such as `lan` or `wan`.
+     */
     getName(): string;
 
-    getNetmask(): string;
+    /**
+     * Query the first (primary) IPv4 netmask of the logical interface.
+     *
+     * @returns Returns the netmask of the primary IPv4 address registered by the protocol handler or `null` if no IPv4 addresses were set.
+     */
+    getNetmask(): string | null;
 
+    /**
+     * Get the name of the opkg package providing the protocol functionality.
+     *
+     * This function should be overwritten by protocol specific subclasses.
+     *
+     * @returns Returns the name of the opkg package required for the protocol to function, e.g. `odhcp6c` for the `dhcpv6` prototocol.
+     */
     abstract getOpkgPackage(): string;
 
+    /**
+     * Get the name of this network protocol class.
+     *
+     * This function will be overwritten by subclasses created by `Network.registerProtocol()`.
+     *
+     * @returns Returns the name of the network protocol implementation, e.g. `static` or `dhcp`.
+     */
     abstract getProtocol(): string;
 
+    /**
+     * Get the type of the underlying interface.
+     *
+     * This function actually is a convenience wrapper around `proto.get("type")` and is mainly used by other `LuCI.network` code to check whether the interface is declared as bridge in UCI.
+     *
+     * @returns Returns the value of the `type` option of the associated logical interface or `null` if no type option is set.
+     */
     getType(): string | null;
 
+    /**
+     * Get the uptime of the logical interface.
+     *
+     * @returns Returns the uptime of the associated interface in seconds.
+     */
     getUptime(): number;
 
+    /**
+     * Get the requested firewall zone name of the logical interface.
+     *
+     * Some protocol implementations request a specific firewall zone to trigger inclusion of their resulting network devices into the firewall rule set.
+     *
+     * @returns Returns the requested firewall zone name as published in the `ubus` runtime information or `null` if the remote protocol handler didn't request a zone.
+     */
     getZoneName(): string | null;
 
+    /**
+     * Checks whether this interface is an alias interface.
+     *
+     * Alias interfaces are interfaces layering on top of another interface and are denoted by a special `@interfacename` notation in the underlying `ifname` option.
+     *
+     * @returns Returns the name of the parent interface if this logical interface is an alias or `null` if it is not an alias interface.
+     */
     isAlias(): string | null;
 
+    /**
+     * Checks whether the underlying logical interface is declared as bridge.
+     *
+     * @returns Returns `true` when the interface is declared with `option type bridge` and when the associated protocol implementation is not marked virtual or `false` when the logical interface is no bridge.
+     */
     isBridge(): boolean;
 
+    /**
+     * Check function for the protocol handler if a new interface is createable.
+     *
+     * This function should be overwritten by protocol specific subclasses.
+     *
+     * @param ifname - The name of the interface to be created.
+     *
+     * @returns Returns a promise resolving if new interface is createable, else rejects with an error message string.
+     */
     abstract isCreateable(ifname: string): Promise<void>;
 
+    /**
+     * Checks whether this logical interface is dynamic.
+     *
+     * A dynamic interface is an interface which has been created at runtime, e.g. as sub-interface of another interface, but which is not backed by any user configuration. Such dynamic interfaces cannot be edited but only brought down or restarted.
+     *
+     * @returns Returns a boolean indicating whether this interface is dynamic (`true`) or not (`false`).
+     */
     isDynamic(): boolean;
 
+    /**
+     * Checks whether this logical interface is "empty", meaning that ut has no network devices attached.
+     *
+     * @returns Returns `true` if this logical interface is empty, else `false`.
+     */
     isEmpty(): boolean;
 
     /**
@@ -672,13 +876,52 @@ declare namespace network {
     set(opt: string, val: string | string[] | null): void;
   }
 
+  /**
+   * A `Network.WifiDevice` class instance represents a wireless radio device present on the system and provides wireless capability information as well as methods for enumerating related wireless networks.
+   */
   class WifiDevice extends baseclass {
-    addWifiNetwork(options: { [key: string]: string | string[] }): WifiNetwork;
+    /**
+     * Adds a new wireless network associated with this radio device to the configuration and sets its options to the provided values.
+     *
+     * @param options - The options to set for the newly added wireless network.
+     *
+     * @returns Returns a promise resolving to a `WifiNetwork` instance describing the newly added wireless network or `null` if the given options were invalid.
+     */
+    addWifiNetwork(options?: {
+      [key: string]: string | string[];
+    }): Promise<WifiNetwork | null>;
 
+    /**
+     * Deletes the wireless network with the given name associated with this radio device.
+     *
+     * @param network - The name of the wireless network to lookup. This may be either an uci configuration section ID, a network ID in the form `radio#.network#` or a Linux network device name like `wlan0` which is resolved to the corresponding configuration section through `ubus` runtime information.
+     *
+     * @returns Returns a promise resolving to `true` when the wireless network was successfully deleted from the configuration or `false` when the given network could not be found or if the found network was not associated with this wireless radio device.
+     */
     deleteWifiNetwork(network: string): Promise<boolean>;
 
+    /**
+     * Read the given UCI option value of this wireless device.
+     *
+     * @param opt - The UCI option name to read.
+     *
+     * @returns Returns the UCI option value or `null` if the requested option is not found.
+     */
     get(opt: string): string | string[] | null;
 
+    /**
+     * Gets a list of supported htmodes.
+     *
+     * The htmode values describe the wide-frequency options supported by the wireless phy.
+     *
+     * @returns Returns an array of valid htmode values for this radio. Currently known mode values are:
+     * - `HT20` - applicable to IEEE 802.11n, 20 MHz wide channels
+     * - `HT40` - applicable to IEEE 802.11n, 40 MHz wide channels
+     * - `VHT20` - applicable to IEEE 802.11ac, 20 MHz wide channels
+     * - `VHT40` - applicable to IEEE 802.11ac, 40 MHz wide channels
+     * - `VHT80` - applicable to IEEE 802.11ac, 80 MHz wide channels
+     * - `VHT160` - applicable to IEEE 802.11ac, 160 MHz wide channels
+     */
     getHTModes(): (
       | "HT20"
       | "HT40"
@@ -689,22 +932,77 @@ declare namespace network {
       | string
     )[];
 
+    /**
+     * Gets a list of supported hwmodes.
+     *
+     * The hwmode values describe the frequency band and wireless standard versions supported by the wireless phy.
+     *
+     * @returns Returns an array of valid hwmode values for this radio. Currently known mode values are:
+     * - `a` - Legacy 802.11a mode, 5 GHz, up to 54 Mbit/s
+     * - `b` - Legacy 802.11b mode, 2.4 GHz, up to 11 Mbit/s
+     * - `g` - Legacy 802.11g mode, 2.4 GHz, up to 54 Mbit/s
+     * - `n` - IEEE 802.11n mode, 2.4 or 5 GHz, up to 600 Mbit/s
+     * - `ac` - IEEE 802.11ac mode, 5 GHz, up to 6770 Mbit/s
+     */
     getHWModes(): ("a" | "b" | "g" | "n" | "ac" | string)[];
 
+    /**
+     * Get a string describing the wireless radio hardware.
+     *
+     * @returns Returns the description string.
+     */
     getI18n(): string;
 
+    /**
+     * Get the configuration name of this wireless radio.
+     *
+     * @returns Returns the UCI section name (e.g. `radio0`) of the corresponding radio configuration which also serves as unique logical identifier for the wireless phy.
+     */
     getName(): string;
 
+    /**
+     * Trigger a wireless scan on this radio device and obtain a list of nearby networks.
+     *
+     * @returns Returns a promise resolving to an array of scan result objects describing the networks found in the vincinity.
+     */
     getScanList(): Promise<WifiScanResult[]>;
 
+    /**
+     * Get the wifi network of the given name belonging to this radio device
+     *
+     * @param network - The name of the wireless network to lookup. This may be either an uci configuration section ID, a network ID in the form `radio#.network#` or a Linux network device name like `wlan0` which is resolved to the corresponding configuration section through `ubus` runtime information.
+     *
+     * @returns Returns a promise resolving to a `Network.WifiNetwork` instance representing the wireless network and rejecting with `null` if the given network could not be found or is not associated with this radio device.
+     */
     getWifiNetwork(network: string): Promise<WifiNetwork>;
 
+    /**
+     * Get all wireless networks associated with this wireless radio device.
+     *
+     * @returns Returns a promise resolving to an array of `Network.WifiNetwork` instances respresenting the wireless networks associated with this radio device.
+     */
     getWifiNetworks(): Promise<WifiNetwork[]>;
 
+    /**
+     * Checks whether this wireless radio is disabled.
+     *
+     * @returns Returns `true` when the wireless radio is marked as disabled in `ubus` runtime state or when the `disabled` option is set in the corresponding UCI configuration.
+     */
     isDisabled(): boolean;
 
+    /**
+     * Check whether the wireless radio is marked as up in the `ubus` runtime state.
+     *
+     * @returns Returns `true` when the radio device is up, else `false`.
+     */
     isUp(): boolean;
 
+    /**
+     * Set the given UCI option of this network to the given value.
+     *
+     * @param opt - The name of the UCI option to set.
+     * @param val - The value to set or `null` to remove the given option from the configuration.
+     */
     set(opt: string, val: string | string[] | null): void;
   }
 
@@ -729,12 +1027,44 @@ declare namespace network {
       ban_time?: number
     ): Promise<number>;
 
+    /**
+     * Read the given UCI option value of this wireless network.
+     *
+     * @param opt - The UCI option name to read.
+     *
+     * @returns Returns the UCI option value or `null` if the requested option is not found.
+     */
     get(opt: string): string | string[] | null;
 
+    /**
+     * Query the current BSSID from runtime information.
+     *
+     * @returns Returns the current BSSID or Mesh ID as reported by `ubus` runtime information.
+     */
     getActiveBSSID(): string;
 
+    /**
+     * Query the current encryption settings from runtime information.
+     *
+     * @returns Returns a string describing the current encryption or `-` if the the encryption state could not be found in `ubus` runtime information.
+     */
     getActiveEncryption(): string;
 
+    /**
+     * Query the current operation mode from runtime information.
+     *
+     * @returns Returns the human readable mode name as reported by `ubus` runtime state. Possible returned values are:
+     * - `Master`
+     * - `Ad-Hoc`
+     * - `Client`
+     * - `Monitor`
+     * - `Master (VLAN)`
+     * - `WDS`
+     * - `Mesh Point`
+     * - `P2P Client`
+     * - `P2P Go`
+     * - `Unknown`
+     */
     getActiveMode():
       | "Master"
       | "Ad-Hoc"
@@ -747,46 +1077,158 @@ declare namespace network {
       | "P2P Go"
       | "Unknown";
 
+    /**
+     * Query the current operation mode from runtime information as translated string.
+     *
+     * @returns Returns the translated, human readable mode name as reported by `ubus` runtime state.
+     */
     getActiveModeI18n(): string;
 
+    /**
+     * Query the current SSID from runtime information.
+     *
+     * @returns Returns the current SSID or Mesh ID as reported by `ubus` runtime information.
+     */
     getActiveSSID(): string;
 
+    /**
+     * Fetch the list of associated peers.
+     *
+     * @returns Returns a promise resolving to an array of wireless peers associated with this network.
+     */
     getAssocList(): Promise<WifiPeerEntry[]>;
 
+    /**
+     * Query the current average bitrate of all peers associated to this wireless network.
+     *
+     * @returns Returns the average bit rate among all peers associated to the network as reported by `ubus` runtime information or `null` if the information is not available.
+     */
     getBitRate(): number | null;
 
+    /**
+     * Get the configured BSSID of the wireless network.
+     *
+     * @returns Returns the BSSID value or `null` if none has been specified.
+     */
     getBSSID(): string | null;
 
+    /**
+     * Query the current wireless channel.
+     *
+     * @returns Returns the wireless channel as reported by `ubus` runtime information or `null` if it cannot be determined.
+     */
     getChannel(): number | null;
 
+    /**
+     * Query the current country code.
+     *
+     * @returns Returns the wireless country code as reported by `ubus` runtime information or `00` if it cannot be determined.
+     */
     getCountryCode(): string;
 
+    /**
+     * Get the associated Linux network device.
+     *
+     * @returns Returns a `Network.Device` instance representing the Linux network device associted with this wireless network.
+     */
     getDevice(): Device;
 
+    /**
+     * Query the current operating frequency of the wireless network.
+     *
+     * @returns Returns the current operating frequency of the network from `ubus` runtime information in GHz or `null` if the information is not available.
+     */
     getFrequency(): string | null;
 
+    /**
+     * Get a description string for this wireless network.
+     *
+     * @returns Returns a string describing this network, consisting of the term `Wireless Network`, followed by the active operation mode, the SSID, BSSID or internal network ID and the Linux network device name, depending on which information is available.
+     */
     getI18n(): string;
 
+    /**
+     * Get the internal network ID of this wireless network.
+     *
+     * The network ID is a LuCI specific identifer in the form `radio#.network#` to identify wireless networks by their corresponding radio and network index numbers.
+     *
+     * @returns Returns the LuCI specific network ID.
+     */
     getID(): string;
 
-    getIfname(): string;
+    /**
+     * Get the Linux network device name.
+     *
+     * @returns Returns the current Linux network device name as resolved from `ubus` runtime information or `null` if this network has no associated network device, e.g. when not configured or up.
+     */
+    getIfname(): string | null;
 
-    getMeshID(): string;
+    /**
+     * Get the configured Mesh ID of the wireless network.
+     *
+     * @returns Returns the configured mesh ID value or `null` when this network is not in mesh mode.
+     */
+    getMeshID(): string | null;
 
-    getMode(): string;
+    /**
+     * Get the configured operation mode of the wireless network.
+     *
+     * @returns Returns the configured operation mode. Possible values are:
+     * - `ap` - Master (Access Point) mode
+     * - `sta` - Station (client) mode
+     * - `adhoc` - Ad-Hoc (IBSS) mode
+     * - `mesh` - Mesh (IEEE 802.11s) mode
+     * - `monitor` - Monitor mode
+     */
+    getMode(): "ap" | "sta" | "adhoc" | "mesh" | "monitor";
 
+    /**
+     * Get the configuration ID of this wireless network.
+     *
+     * @returns Returns the corresponding UCI section ID of the network.
+     */
     getName(): string;
 
+    /**
+     * Get the primary logical interface this wireless network is attached to.
+     *
+     * @returns Returns a `Network.Protocol` instance representing the logical interface or `null` if this network is not attached to any logical interface.
+     */
     getNetwork(): Protocol | null;
 
+    /**
+     * Get the names of the logical interfaces this wireless network is attached to.
+     *
+     * @returns Returns an array of logical interface names.
+     */
     getNetworkNames(): string[];
 
+    /**
+     * Get the logical interfaces this wireless network is attached to.
+     *
+     * @returns Returns an array of `Network.Protocol` instances representing the logical interfaces this wireless network is attached to.
+     */
     getNetworks(): Protocol[];
 
+    /**
+     * Query the current radio noise floor.
+     *
+     * @returns Returns the radio noise floor in dBm as reported by `ubus` runtime information or `0` if it cannot be determined.
+     */
     getNoise(): number;
 
+    /**
+     * Get a short description string for this wireless network.
+     *
+     * @returns Returns a string describing this network, consisting of the active operation mode, followed by either the SSID, BSSID or internal network ID, depending on which information is available.
+     */
     getShortName(): string;
 
+    /**
+     * Query the current wireless signal.
+     *
+     * @returns Returns the wireless signal in dBm as reported by `ubus` runtime information or `null` if it cannot be determined.
+     */
     getSignal(): number | null;
 
     /**
@@ -798,24 +1240,79 @@ declare namespace network {
      */
     getSignalLevel(): number;
 
+    /**
+     * Calculate the current signal quality percentage.
+     *
+     * @returns 	Returns the calculated signal quality in percent. The value is calculated from the `quality` and `quality_max` indicators reported by `ubus` runtime state.
+     */
     getSignalPercent(): number;
 
+    /**
+     * Get the configured SSID of the wireless network.
+     *
+     * @returns Returns the configured SSID value or `null` when this network is in mesh mode.
+     */
     getSSID(): string | null;
 
+    /**
+     * Query the current radio TX power.
+     *
+     * @returns Returns the wireless network transmit power in dBm as reported by `ubus` runtime information or `null` if it cannot be determined.
+     */
     getTXPower(): number | null;
 
+    /**
+     * Query the radio TX power offset.
+     *
+     * Some wireless radios have a fixed power offset, e.g. due to the use of external amplifiers.
+     *
+     * @returns Returns the wireless network transmit power offset in dBm as reported by `ubus` runtime information or `0` if there is no offset, or if it cannot be determined.
+     */
     getTXPowerOffset(): number;
 
+    /**
+     * Get the corresponding wifi radio device.
+     *
+     * @returns Returns a `Network.WifiDevice` instance representing the corresponding wifi radio device or `null` if the related radio device could not be found.
+     */
     getWifiDevice(): WifiDevice | null;
 
+    /**
+     * Get the name of the corresponding wifi radio device.
+     *
+     * @returns Returns the name of the radio device this network is configured on or `null` if it cannot be determined.
+     */
     getWifiDeviceName(): string | null;
 
+    /**
+     * Check whether this wifi network supports deauthenticating clients.
+     *
+     * @returns Returns `true` when this wifi network instance supports forcibly deauthenticating clients, otherwise `false`.
+     */
     isClientDisconnectSupported(): boolean;
 
+    /**
+     * Checks whether this wireless network is disabled.
+     *
+     * @returns Returns `true` when the wireless radio is marked as disabled in `ubus` runtime state or when the `disabled` option is set in the corresponding UCI configuration.
+     */
     isDisabled(): boolean;
 
+    /**
+     * Check whether the radio network is up.
+     *
+     * This function actually queries the up state of the related radio device and assumes this network to be up as well when the parent radio is up. This is due to the fact that OpenWrt does not control virtual interfaces individually but within one common hostapd instance.
+     *
+     * @returns Returns `true` when the network is up, else `false`.
+     */
     isUp(): boolean;
 
+    /**
+     * Set the given UCI option of this network to the given value.
+     *
+     * @param opt - The name of the UCI option to set.
+     * @param val - The value to set or `null` to remove the given option from the configuration.
+     */
     set(opt: string, val: string | string[] | null): void;
   }
 
