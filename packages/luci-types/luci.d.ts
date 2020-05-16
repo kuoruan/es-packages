@@ -61,6 +61,7 @@ declare class LuCI extends BC {
     sessionid: string;
     token: string;
     ubuspath: string;
+    [key: string]: any;
   };
 
   /**
