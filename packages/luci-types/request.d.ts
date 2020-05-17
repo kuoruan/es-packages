@@ -9,11 +9,15 @@ export as namespace request;
 export = request;
 
 /**
- * The `Request` class allows initiating HTTP requests and provides utilities for dealing with responses.
+ * The `Request` class allows initiating HTTP requests and provides utilities
+ * for dealing with responses.
  */
 declare namespace request {
   /**
-   * Register an HTTP response interceptor function. Interceptor functions are useful to perform default actions on incoming HTTP responses, such as checking for expired authentication or for implementing request retries before returning a failure.
+   * Register an HTTP response interceptor function. Interceptor functions are
+   * useful to perform default actions on incoming HTTP responses, such as
+   * checking for expired authentication or for implementing request retries
+   * before returning a failure.
    *
    * @param interceptorFn - The interceptor function to register.
    *
@@ -26,7 +30,8 @@ declare namespace request {
    *
    * @param url - The URL to convert.
    *
-   * @returns The absolute URL derived from the given one, or the original URL if it already was absolute.
+   * @returns The absolute URL derived from the given one, or the original URL
+   * if it already was absolute.
    */
   function expandURL(url: string): string;
 
@@ -44,7 +49,8 @@ declare namespace request {
    * Initiate an HTTP POST request to the given target.
    *
    * @param target - The URL to request.
-   * @param data - The request data to send, see `LuCI.request.RequestOptions` for details.
+   * @param data - The request data to send, see `LuCI.request.RequestOptions`
+   * for details.
    * @param options - Additional options to configure the request.
    *
    * @returns The resulting HTTP response.
@@ -56,7 +62,8 @@ declare namespace request {
   ): LuCI.response;
 
   /**
-   * Remove an HTTP response interceptor function. The passed function value must be the very same value that was used to register the function.
+   * Remove an HTTP response interceptor function. The passed function value
+   * must be the very same value that was used to register the function.
    *
    * @param interceptorFn - The interceptor function to remove.
    *
@@ -75,7 +82,8 @@ declare namespace request {
   function request(target: string, options?: RequestOptions): LuCI.response;
 
   /**
-   * Interceptor functions are invoked whenever an HTTP reply is received, in the order these functions have been registered.
+   * Interceptor functions are invoked whenever an HTTP reply is received, in
+   * the order these functions have been registered.
    *
    * @param res - The HTTP response object
    */
@@ -90,7 +98,8 @@ declare namespace request {
     method?: string;
 
     /**
-     * Query string data to append to the URL. Non-string values of the given object will be converted to JSON.
+     * Query string data to append to the URL. Non-string values of the given
+     * object will be converted to JSON.
      */
     query?: { [key: string]: object | string };
 
@@ -124,14 +133,20 @@ declare namespace request {
     credentials?: string;
 
     /**
-     * Overrides the request response type. Valid values or `text` to interpret the response as UTF-8 string or `blob` to handle the response as binary `Blob` data.
+     * Overrides the request response type. Valid values or `text` to interpret
+     * the response as UTF-8 string or `blob` to handle the response as binary
+     * `Blob` data.
      *
      * @defaultValue text
      */
     responseType: string;
 
     /**
-     * Specifies the HTTP message body to send along with the request. If the value is a function, it is invoked and the return value used as content, if it is a FormData instance, it is used as-is, if it is an object, it will be converted to JSON, in all other cases it is converted to a string.
+     * Specifies the HTTP message body to send along with the request. If the
+     * value is a function, it is invoked and the return value used as content,
+     * if it is a FormData instance, it is used as-is, if it is an object, it
+     * will be converted to JSON, in all other cases it is converted to a
+     * string.
      */
     content?: any;
 
@@ -141,7 +156,8 @@ declare namespace request {
     header?: { [key: string]: string };
 
     /**
-     * An optional request callback function which receives ProgressEvent instances as sole argument during the HTTP request transfer.
+     * An optional request callback function which receives ProgressEvent
+     * instances as sole argument during the HTTP request transfer.
      */
     progress?: Function;
   };

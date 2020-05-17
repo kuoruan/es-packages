@@ -10,9 +10,12 @@ export as namespace XHR;
 export = XHR;
 
 /**
- * The `LuCI.xhr` class is a legacy compatibility shim for the functionality formerly provided by `xhr.js`. It is registered as global `window.XHR` symbol for compatibility with legacy code.
+ * The `LuCI.xhr` class is a legacy compatibility shim for the functionality
+ * formerly provided by `xhr.js`. It is registered as global `window.XHR` symbol
+ * for compatibility with legacy code.
  *
- * @deprecated New code should use `LuCI.request` instead to implement HTTP request handling.
+ * @deprecated New code should use `LuCI.request` instead to implement HTTP
+ * request handling.
  */
 declare class XHR {
   /**
@@ -34,7 +37,9 @@ declare class XHR {
   /**
    * Cancels a running request.
    *
-   * This function does not actually cancel the underlying `XMLHTTPRequest` request but it sets a flag which prevents the invocation of the callback function when the request eventually finishes or timed out.
+   * This function does not actually cancel the underlying `XMLHTTPRequest`
+   * request but it sets a flag which prevents the invocation of the callback
+   * function when the request eventually finishes or timed out.
    *
    * @deprecated Do not use.
    */
@@ -83,7 +88,8 @@ declare class XHR {
    *
    * This function simply throws an `InternalError` when invoked.
    *
-   * @throws Throws an {@link InternalError} with the message `Not implemented` when invoked.
+   * @throws Throws an {@link InternalError} with the message `Not implemented`
+   * when invoked.
    *
    * @deprecated Do not use.
    */

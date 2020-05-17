@@ -27,9 +27,11 @@ declare namespace session {
   /**
    * Retrieve data from the local session storage.
    *
-   * @param key - The key to retrieve from the session data store. If omitted, all session data will be returned.
+   * @param key - The key to retrieve from the session data store. If omitted,
+   * all session data will be returned.
    *
-   * @returns Returns the stored session data or `null` if the given key wasn't found.
+   * @returns Returns the stored session data or `null` if the given key wasn't
+   * found.
    */
   function getLocalData(key: string): any;
 
@@ -37,7 +39,8 @@ declare namespace session {
    * Set data in the local session storage.
    *
    * @param key - The key to set in the session data store.
-   * @param value - The value to store. It will be internally converted to JSON before being put in the session store.
+   * @param value - The value to store. It will be internally converted to JSON
+   * before being put in the session store.
    *
    * @returns Returns `true` if the data could be stored or `false` on error.
    */
