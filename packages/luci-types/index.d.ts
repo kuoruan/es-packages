@@ -4,23 +4,23 @@
 // Definitions: https://github.com/kuoruan/es-packages
 // TypeScript Version: 3.8
 
-export import baseclass = require("./baseclass");
-export import dom = require("./dom");
-export import firewall = require("./firewall");
-export import form = require("./form");
-export import fs = require("./fs");
-export import LuCI = require("./luci");
-export import network = require("./network");
-export import prng = require("./prng");
-export import request = require("./request");
-export import rpc = require("./rpc");
-export import session = require("./session");
-export import uci = require("./uci");
-export import ui = require("./ui");
-export import validation = require("./validation");
-export import view = require("./view");
-export import widgets = require("./widgets");
-export import XHR = require("./xhr");
+export import baseclass = require("./typings/baseclass");
+export import dom = require("./typings/dom");
+export import firewall = require("./typings/firewall");
+export import form = require("./typings/form");
+export import fs = require("./typings/fs");
+export import LuCI = require("./typings/luci");
+export import network = require("./typings/network");
+export import prng = require("./typings/prng");
+export import request = require("./typings/request");
+export import rpc = require("./typings/rpc");
+export import session = require("./typings/session");
+export import uci = require("./typings/uci");
+export import ui = require("./typings/ui");
+export import validation = require("./typings/validation");
+export import view = require("./typings/view");
+export import widgets = require("./typings/widgets");
+export import XHR = require("./typings/xhr");
 
 // alias for prng
 export import random = prng;

@@ -104,7 +104,11 @@ declare class LuCI extends BC {
    *
    * @returns Returns the bound function.
    */
-  bind(fn: Function, self: any, ...args: any[]): Function;
+  bind<T>(
+    fn: (this: T, ...args: any[]) => any,
+    self: T,
+    ...args: any[]
+  ): (...args: any[]) => any;
 
   /**
    * A wrapper around `raise()` which also renders the error either as modal

@@ -88,7 +88,7 @@ declare namespace form {
      * containing the form element's markup, including the markup of any child
      * elements.
      */
-    abstract render(): Node | Promise<Node>;
+    abstract render(...args: any[]): Node | Promise<Node>;
 
     /**
      * Strip any HTML tags from the given input string.
@@ -452,7 +452,7 @@ declare namespace form {
      *
      * @returns Returns the configuration value.
      */
-    cfgvalue(section_id: string): any;
+    cfgvalue(section_id: string, set_value: any): T | Promise<T> | null;
 
     /**
      * Add a dependency contraint to the option.
@@ -606,7 +606,7 @@ declare namespace form {
      * with. The return value of this function is filtered through
      * `Promise.resolve()` so it may return promises if overridden by user code.
      */
-    load(section_id: string): T | Promise<T>;
+    load(section_id: string): any | Promise<any>;
 
     /**
      * Parse the option element input.
@@ -638,7 +638,11 @@ declare namespace form {
      */
     remove(section_id: string): void;
 
-    render(): Node | Promise<Node>;
+    render(
+      option_index: number,
+      section_id: string,
+      in_table: boolean
+    ): Node | Promise<Node>;
 
     /**
      * Obtain a textual input representation.
