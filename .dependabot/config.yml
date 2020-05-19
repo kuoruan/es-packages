@@ -17,14 +17,6 @@ update_configs:
           update_type: "all"
 
   - package_manager: "javascript"
-    directory: "/packages/class-names/"
-    update_schedule: "monthly"
-    automerged_updates:
-      - match:
-          dependency_type: "all"
-          update_type: "all"
-
-  - package_manager: "javascript"
     directory: "/packages/luci-types/"
     update_schedule: "monthly"
 
