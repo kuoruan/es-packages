@@ -81,11 +81,11 @@ declare namespace uci {
    * - Returns `null` if the config, section or option has not been found or if
    *   the corresponding configuration is not loaded.
    */
-  function get(
+  function get<T = string | string[]>(
     config: string,
     sid: string,
     option: string
-  ): string | string[] | null;
+  ): T | null;
   function get(config: string, sid: string): SectionObject | null;
 
   /**
