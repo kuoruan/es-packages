@@ -117,7 +117,7 @@ declare namespace ui {
    */
   function createHandlerFn<T>(
     ctx: T,
-    fn: (this: T, ...args: any) => any | string,
+    fn: ((this: T, ...args: any) => any) | string,
     ...extra_args: any[]
   ): (...args: any) => any | null;
 
