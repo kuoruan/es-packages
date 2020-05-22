@@ -115,11 +115,11 @@ declare namespace ui {
    * is a string which could not be found in `ctx` or if `ctx[fn]` is not a
    * valid function value.
    */
-  function createHandlerFn<T>(
+  function createHandlerFn<T, F extends (this: T, ...args: any[]) => any>(
     ctx: T,
-    fn: ((this: T, ...args: any) => any) | string,
+    fn: F | string,
     ...extra_args: any[]
-  ): (...args: any) => any | null;
+  ): ((...args: any[]) => any) | null;
 
   /**
    * Remove an header area indicator.

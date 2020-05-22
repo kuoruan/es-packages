@@ -104,8 +104,8 @@ declare class LuCI extends BC {
    *
    * @returns Returns the bound function.
    */
-  bind<T>(
-    fn: (this: T, ...args: any[]) => any,
+  bind<T, F extends (this: T, ...args: any[]) => any>(
+    fn: F,
     self: T,
     ...args: any[]
   ): (...args: any[]) => any;
