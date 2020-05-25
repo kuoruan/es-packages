@@ -448,7 +448,7 @@ declare namespace ui {
        * `true` to accept the given input value. Any other return value type is
        * converted to a string and treated as validation error message.
        */
-      validator?: Function;
+      validate?: (val: string) => boolean | string | object;
 
       /**
        * Specifies whether the widget should be rendered in disabled state
