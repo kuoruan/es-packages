@@ -16,8 +16,7 @@
   },
   "files": [
     "index.d.ts",
-    "typings",
-    "tsconfig.json",
+    "reference",
     "README.md",
     "LICENSE"
   ],
