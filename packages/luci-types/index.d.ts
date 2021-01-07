@@ -4,54 +4,57 @@
 // Definitions: https://github.com/kuoruan/es-packages
 // TypeScript Version: 3.8
 
-export import baseclass = require("./typings/baseclass");
-export import dom = require("./typings/dom");
-export import firewall = require("./typings/firewall");
-export import form = require("./typings/form");
-export import fs = require("./typings/fs");
-export import LuCI = require("./typings/luci");
-export import network = require("./typings/network");
-export import prng = require("./typings/prng");
-export import request = require("./typings/request");
-export import rpc = require("./typings/rpc");
-export import session = require("./typings/session");
-export import uci = require("./typings/uci");
-export import ui = require("./typings/ui");
-export import validation = require("./typings/validation");
-export import view = require("./typings/view");
-export import widgets = require("./typings/widgets");
-export import XHR = require("./typings/xhr");
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+/// <reference path="./reference/baseclass.d.ts" />
+/// <reference path="./reference/dom.d.ts" />
+/// <reference path="./reference/firewall.d.ts" />
+/// <reference path="./reference/form.d.ts" />
+/// <reference path="./reference/fs.d.ts" />
+/// <reference path="./reference/headers.d.ts" />
+/// <reference path="./reference/luci.d.ts" />
+/// <reference path="./reference/network.d.ts" />
+/// <reference path="./reference/poll.d.ts" />
+/// <reference path="./reference/prng.d.ts" />
+/// <reference path="./reference/request.d.ts" />
+/// <reference path="./reference/response.d.ts" />
+/// <reference path="./reference/rpc.d.ts" />
+/// <reference path="./reference/session.d.ts" />
+/// <reference path="./reference/uci.d.ts" />
+/// <reference path="./reference/ui.d.ts" />
+/// <reference path="./reference/validation.d.ts" />
+/// <reference path="./reference/view.d.ts" />
+/// <reference path="./reference/widgets.d.ts" />
+/// <reference path="./reference/xhr.d.ts" />
 
-// alias for prng
-export import random = prng;
+type Newable<T = Record<string, never>> = new (...args: any) => T;
 
-declare global {
-  interface String {
-    /**
-     * Format string
-     */
-    format(...args: any[]): string;
-
-    /**
-     * Replace spaces (`\s`) and new-lines (`\n`) to no-break space (`&#160;`)
-     */
-    nobr(): string;
-  }
+declare interface String {
+  /**
+   * Format string
+   */
+  format(...args: any[]): string;
 
   /**
-   * Translate function
-   *
-   * @param str - The string to be tanslated.
+   * Replace spaces (`\s`) and new-lines (`\n`) to no-break space (`&#160;`)
    */
-  function _(str: string): string;
-
-  /**
-   * Alias of LuCI
-   */
-  const L: LuCI;
-
-  /**
-   * Alias of dom.create
-   */
-  const E: typeof LuCI.dom.create;
+  nobr(): string;
 }
+
+/**
+ * Alias of LuCI
+ */
+declare const L: LuCI;
+
+/**
+ * Alias of dom.create
+ */
+declare const E: typeof LuCI.dom.prototype.create;
+
+/**
+ * Translate function
+ *
+ * @param str - The string to be tanslated.
+ */
+declare function _(str: string): string;
+
+declare const fs: LuCI.fs;

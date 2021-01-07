@@ -1,14 +1,3 @@
-// Type definitions for LuCI.xhr
-// Documentation: http://openwrt.github.io/luci/jsapi/LuCI.xhr.html
-// Definitions by: Xingwang Liao <https://github.com/kuoruan>
-// TypeScript Version: 3.8
-
-import LuCI from "./luci";
-import Request from "./request";
-
-export as namespace XHR;
-export = XHR;
-
 /**
  * The `LuCI.xhr` class is a legacy compatibility shim for the functionality
  * formerly provided by `xhr.js`. It is registered as global `window.XHR` symbol
@@ -59,7 +48,7 @@ declare class XHR {
    */
   get(
     url: string,
-    data?: object,
+    data?: Record<string, unknown>,
     callback?: LuCI.requestCallbackFn,
     timeout?: number
   ): Promise<null>;
@@ -78,7 +67,7 @@ declare class XHR {
    */
   post(
     url: string,
-    data?: object,
+    data?: Record<string, unknown>,
     callback?: LuCI.requestCallbackFn,
     timeout?: number
   ): Promise<null>;
@@ -115,21 +104,28 @@ declare namespace XHR {
   /**
    * {@inheritDoc Request.poll.stop}
    */
-  const stop: typeof Request.poll.stop;
+  const stop: typeof LuCI.prototype.Poll.stop;
 
   /**
    * {@inheritDoc Request.poll.stop}
    */
-  const halt: typeof Request.poll.stop;
+  const halt: typeof LuCI.prototype.Poll.stop;
 
   /**
    *
    * {@inheritDoc Request.poll.start}
    */
-  const run: typeof Request.poll.start;
+  const run: typeof LuCI.prototype.Poll.start;
 
   /**
    * {@inheritDoc Request.poll.active}
    */
-  const running: typeof Request.poll.active;
+  const running: typeof LuCI.prototype.Poll.active;
+}
+
+declare namespace LuCI {
+  /**
+   * @deprecated
+   */
+  class xhr extends XHR {}
 }

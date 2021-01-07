@@ -1,32 +1,5 @@
-// Type definitions for LuCI
-// Documentation: http://openwrt.github.io/luci/jsapi/LuCI.html
-// Definitions by: Xingwang Liao <https://github.com/kuoruan>
-// TypeScript Version: 3.8
-
-import BC from "./baseclass";
-import D from "./dom";
-import F from "./form";
-import FS from "./fs";
-import N from "./network";
-import P from "./poll";
-import R from "./request";
-import RPC from "./rpc";
-import S from "./session";
-import UCI from "./uci";
-import U from "./ui";
-import VA from "./validation";
-import V from "./view";
-import XHR from "./xhr";
-
-export as namespace LuCI;
-export = LuCI;
-
-/**
- * This is the LuCI base class. It is automatically instantiated and accessible
- * using the global `L` variable.
- */
-declare class LuCI extends BC {
-  constructor(env: object);
+declare class LuCI {
+  constructor(env: Record<string, unknown>);
 
   /**
    * Legacy `L.Class` class alias.
@@ -34,7 +7,7 @@ declare class LuCI extends BC {
    * @deprecated New view code should use `'require baseclass'`; to request the
    * `LuCI.baseclass` class.
    */
-  Class: typeof LuCI.baseclass;
+  readonly Class: LuCI.baseclass;
 
   /**
    * Legacy `L.dom` class alias.
@@ -42,13 +15,13 @@ declare class LuCI extends BC {
    * @deprecated New view code should use `'require dom'`; to request the
    * `LuCI.dom` class.
    */
-  dom: typeof LuCI.dom;
+  readonly dom: LuCI.dom;
 
   /**
    * The `env` object holds environment settings used by LuCI, such as request
    * timeouts, base URLs etc.
    */
-  env: {
+  readonly env: {
     base_url: string;
     cgi_base: string;
     documentroot: string;
@@ -74,7 +47,7 @@ declare class LuCI extends BC {
    * @deprecated New view code should use `'require poll'`; to request the
    * `LuCI.poll` class.
    */
-  Poll: typeof LuCI.poll;
+  readonly Poll: LuCI.poll;
 
   /**
    * Legacy `L.Request` class alias.
@@ -82,7 +55,7 @@ declare class LuCI extends BC {
    * @deprecated New view code should use `'require request'`; to request the
    * `LuCI.request` class.
    */
-  Request: typeof LuCI.request;
+  readonly Request: LuCI.request;
 
   /**
    * Legacy `L.view` class alias.
@@ -90,7 +63,7 @@ declare class LuCI extends BC {
    * @deprecated New view code should use `'require view'`; to request the
    * `LuCI.view` class.
    */
-  view: typeof LuCI.view;
+  readonly view: typeof LuCI.view;
 
   /**
    * Return a bound function using the given `self` as `this` context and any
@@ -270,11 +243,11 @@ declare class LuCI extends BC {
   poll(
     interval: number,
     url: string,
-    args: object,
+    args: Record<string, unknown>,
     cb: LuCI.requestCallbackFn,
     post: boolean
-  ): Function;
-  poll(interval: number, url: string, cb: LuCI.requestCallbackFn): Function;
+  ): () => void;
+  poll(interval: number, url: string, cb: LuCI.requestCallbackFn): () => void;
 
   /**
    * Issues a POST request to the given url and invokes the specified callback
@@ -292,7 +265,7 @@ declare class LuCI extends BC {
    */
   post(
     url: string,
-    args?: { [key: string]: string },
+    args?: Record<string, undefined>,
     cb?: LuCI.requestCallbackFn
   ): Promise<null>;
   post(url: string, cb?: LuCI.requestCallbackFn): Promise<null>;
@@ -393,7 +366,11 @@ declare class LuCI extends BC {
    *
    * @returns Returns an array containing the sorted keys of the given object.
    */
-  sortedKeys(obj: object, key?: string, sortmode?: string): string[];
+  sortedKeys(
+    obj: Record<string, unknown>,
+    key?: string,
+    sortmode?: string
+  ): string[];
 
   /**
    * Deprecated wrapper around `Poll.remove()`.
@@ -405,7 +382,7 @@ declare class LuCI extends BC {
    *
    * @deprecated Use `LuCI.poll.remove()`.
    */
-  stop(entry: Function): boolean;
+  stop(entry: () => void): boolean;
 
   /**
    * Converts the given value to an array. If the given value is of type array,
@@ -452,124 +429,4 @@ declare namespace LuCI {
     data: any,
     duration: number
   ) => void;
-
-  /**
-   * The `Headers` class is an internal utility class exposed in HTTP response
-   * objects using the `response.headers` property.
-   */
-  class headers extends BC {
-    /**
-     * Returns the value of the given header name. Note: Header-Names are
-     * case-insensitive.
-     *
-     * @param name - The header name to read
-     *
-     * @returns The value of the given header name or `null` if the header isn't
-     * present.
-     */
-    get(name: string): string | null;
-
-    /**
-     * Checks whether the given header name is present.
-     *
-     * @remarks Header-Names are case-insensitive.
-     *
-     * @param name - The header name to check
-     *
-     * @returns Returns `true` if the header name is present, `false` otherwise
-     */
-    has(name: string): boolean;
-  }
-
-  /**
-   * The `Response` class is an internal utility class representing HTTP
-   * responses.
-   */
-  class response extends BC {
-    /**
-     * The total duration of the HTTP request in milliseconds
-     */
-    duration: number;
-
-    /**
-     * The HTTP headers of the response
-     */
-    headers: headers;
-
-    /**
-     * Describes whether the response is successful (status codes `200..299`) or
-     * not
-     */
-    ok: boolean;
-
-    /**
-     * The numeric HTTP status code of the response
-     */
-    status: number;
-
-    /**
-     * The HTTP status description message of the response
-     */
-    statusText: string;
-
-    /**
-     * The final URL of the request, i.e. after following redirects.
-     */
-    url: string;
-
-    /**
-     * Access the response content as blob.
-     *
-     * @returns The response content as blob.
-     */
-    blob(): Blob;
-
-    /**
-     * Clones the given response object, optionally overriding the content of
-     * the cloned instance.
-     *
-     * @param content - Override the content of the cloned response. Object
-     * values will be treated as JSON response data, all other types will be
-     * converted using `String()` and treated as response text.
-     *
-     * @returns The cloned `Response` instance.
-     */
-    clone(content?: any): response;
-
-    /**
-     * Access the response content as JSON data.
-     *
-     * @throws Throws `SyntaxError` if the content isn't valid JSON.
-     *
-     * @returns The parsed JSON data.
-     */
-    json(): any;
-
-    /**
-     * Access the response content as string.
-     *
-     * @returns The response content.
-     */
-    text(): string;
-  }
-
-  export import baseclass = BC;
-  export import dom = D;
-  export import form = F;
-  export import fs = FS;
-  export import network = N;
-  export import poll = P;
-  export import request = R;
-  export import rpc = RPC;
-  export import session = S;
-  export import uci = UCI;
-  export import ui = U;
-  export import validation = VA;
-  export import view = V;
-  export import xhr = XHR;
-
-  /**
-   * Alias for baseclass
-   */
-  export import Class = BC;
 }
