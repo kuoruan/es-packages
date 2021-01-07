@@ -1,33 +1,35 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
     es6: true,
     node: true,
+    browser: true,
   },
   extends: [
+    "eslint:recommended",
     "plugin:prettier/recommended",
-    "plugin:import/typescript",
-    "plugin:import/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
   ],
+  plugins: ["prettier", "import", "tsdoc"],
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: "module",
+  },
   rules: {
-    "no-var": "error",
-    "prefer-const": "error",
-    "tsdoc/syntax": "warn",
-    "sort-imports": [
-      "error",
-      {
-        ignoreCase: false,
-        ignoreDeclarationSort: false,
-        // eslint-import-plugin will do this
-        ignoreDeclarationSort: true,
-        memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
-      },
-    ],
     "import/order": [
       "error",
       {
-        alphabetize: { order: "asc", caseInsensitive: false },
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          ["parent", "sibling"],
+          "index",
+          "object",
+          "unknown",
+        ],
+        alphabetize: { order: "asc", caseInsensitive: true },
         "newlines-between": "always",
       },
     ],
@@ -35,23 +37,35 @@ module.exports = {
       "error",
       {
         importFunctions: ["dynamicImport"],
-        webpackChunknameFormat: "[a-zA-Z0-57-9-/_]+",
+        webpackChunknameFormat: "[a-zA-Z0-9-/_]+",
       },
     ],
   },
   overrides: [
     {
-      files: "packages/**/*.d.ts",
+      files: ["**/*.ts", "**/*.tsx"],
+      parser: "@typescript-eslint/parser",
+      plugins: ["prettier", "import", "tsdoc", "@typescript-eslint"],
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: "module",
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.eslint.json", "./packages/*/tsconfig.json"],
+      },
+      extends: [
+        "eslint:recommended",
+        "plugin:prettier/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+      ],
       rules: {
-        "import/default": "off",
+        "@typescript-eslint/no-explicit-any": ["off"],
+      },
+      settings: {
+        "import/resolver": ["node", "typescript"],
       },
     },
   ],
-  plugins: ["@typescript-eslint", "prettier", "import", "tsdoc"],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    sourceType: "module",
-    project: ["./tsconfig.eslint.json", "./packages/*/tsconfig.json"],
-    tsconfigRootDir: __dirname,
-  },
 };

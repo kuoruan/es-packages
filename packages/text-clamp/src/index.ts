@@ -59,7 +59,7 @@ export default function TextClamp(
     truncationChar: options?.truncationChar ?? "…",
     truncationHTML: options?.truncationHTML ?? "",
     onClamped:
-      typeof options?.onClamped === "function" ? options.onClamped : () => {},
+      typeof options?.onClamped === "function" ? options.onClamped : () => true,
   };
 
   let clampValue: number,
@@ -140,7 +140,7 @@ function truncate(
     Required<Options>,
     "splitOnChars" | "animate" | "truncationChar" | "truncationHTML"
   >,
-  callback: Function
+  callback: () => void
 ): void {
   const doc = el.ownerDocument;
   if (!doc) {
@@ -149,7 +149,7 @@ function truncate(
   }
 
   let splitChars: string[] = [...opts.splitOnChars],
-    splitChar: string = "",
+    splitChar = "",
     chunks: string[] | null = null;
 
   const doTruncate = (target: Node | null) => {

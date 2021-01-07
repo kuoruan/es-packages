@@ -8,13 +8,14 @@
 export default function <T extends (...args: any[]) => any>(
   func: T,
   threshhold = 20,
+  /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
   scope?: any
 ): T {
   if (threshhold < 0) {
     throw new TypeError("invalid threshhold value.");
   }
 
-  let timer = 0;
+  let timer: ReturnType<typeof setTimeout> | null = null;
   let rtn: any;
 
   return <T>function (this: any, ...args: any[]): any {
@@ -22,7 +23,7 @@ export default function <T extends (...args: any[]) => any>(
       const ctx = typeof scope === "undefined" ? this : scope;
 
       timer = setTimeout(() => {
-        timer = 0;
+        timer = null;
         rtn = func.apply(ctx, args);
       }, threshhold);
     }
