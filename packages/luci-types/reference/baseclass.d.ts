@@ -18,7 +18,7 @@ declare namespace LuCI {
      * can be instantiated with `new`.
      */
     static extend<P extends Record<string, unknown> = Record<string, never>>(
-      properties: P & Partial<LuCI.baseclass>
+      properties: P & Partial<Pick<LuCI.baseclass, "__name__">>
     ): LuCI.baseclass & P;
 
     /**
@@ -33,7 +33,10 @@ declare namespace LuCI {
      * @returns Returns a new LuCI.baseclass instance extended by the given
      * properties with its prototype set to this base class to enable inheritance.
      */
-    static instantiate(params: any[], ...new_args: any[]): LuCI.baseclass;
+    static instantiate<T extends LuCI.baseclass = LuCI.baseclass>(
+      params: any[],
+      ...new_args: any[]
+    ): T;
 
     /**
      * Checks whether the given class value is a subclass of this class.
@@ -63,10 +66,10 @@ declare namespace LuCI {
      * @returns Returns a new LuCI.baseclass instance extended by the given
      * properties with its prototype set to this base class to enable inheritance.
      */
-    static singleton(
-      properties: Record<string, unknown>,
+    static singleton<P extends Record<string, unknown> = Record<string, never>>(
+      properties: P & Partial<Pick<LuCI.baseclass, "__name__">>,
       ...new_args: any[]
-    ): LuCI.baseclass;
+    ): LuCI.baseclass & P;
 
     /**
      * Walks up the parent class chain and looks for a class member called `key`
@@ -110,6 +113,6 @@ declare namespace LuCI {
      * @returns Returns a new array consisting of the optional extra arguments and
      * the values extracted from the `args` array beginning with `offset`.
      */
-    varargs<T>(args: T[], offset: number, ...extra_args: T[]): T[];
+    varargs(args: any[], offset: number, ...extra_args: any[]): any[];
   }
 }
