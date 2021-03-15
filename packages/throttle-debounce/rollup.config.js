@@ -8,12 +8,11 @@ export default {
     {
       file: pkg.main,
       format: "cjs",
-      exports: "named",
+      exports: "auto",
     },
     {
       file: pkg.module,
       format: "es",
-      exports: "named",
     },
   ],
   external: [

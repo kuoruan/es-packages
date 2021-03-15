@@ -7,6 +7,7 @@ export default {
   output: [
     {
       file: pkg.main,
+      exports: "auto",
       format: "cjs",
     },
     {
