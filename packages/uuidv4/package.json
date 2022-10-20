@@ -18,8 +18,7 @@
   },
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "keywords": [
     "uuid",
@@ -36,8 +35,9 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-    "rollup": "^2.7.2",
-    "rollup-plugin-typescript2": "^0.31.1",
+    "@rollup/plugin-typescript": "^9.0.1",
+    "rollup": "^3.2.3",
+    "tslib": "^2.4.0",
     "typescript": "^4.0.2"
   }
 }

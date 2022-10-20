@@ -17,8 +17,7 @@
   "files": [
     "index.d.ts",
     "reference",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "keywords": [
     "LuCI",

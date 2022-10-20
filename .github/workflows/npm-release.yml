@@ -20,21 +20,21 @@ jobs:
             token-key: GITHUB_TOKEN
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: Setup node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '12.x'
+          node-version: 16
           registry-url: ${{ matrix.registry-url }}
           scope: '@kuoruan'
-      
+
       - id: get_tag
         name: Get tag
         run: |
           echo "::set-output name=tag::${GITHUB_REF/refs\/tags\//}"
-      
+
       - id: get_info
         name: Get release info
         run: |
@@ -66,18 +66,13 @@ jobs:
             exit 1
           fi
 
-          if [ ! -f "LICENSE" ] && [ -f "${{ github.workspace }}/LICENSE" ] ; then
-            cp "${{ github.workspace }}/LICENSE" .
-          fi
-
           echo "::set-output name=folder::$folder"
-      
+
       - name: Build and publish
         run: |
-          cd "${{ steps.check_package.outputs.folder }}"
-          
-          yarn install
-          yarn build
-          yarn publish
+          pnpm install
+
+          pnpm --filter "@kuoruan/${{ steps.check_package.outputs.folder }}" build
+          pnpm --filter "@kuoruan/${{ steps.check_package.outputs.folder }}" publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets[matrix.token-key] }}

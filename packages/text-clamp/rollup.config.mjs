@@ -1,7 +1,20 @@
-import { terser } from "rollup-plugin-terser";
-import typescript from "rollup-plugin-typescript2";
+import typescript from "@rollup/plugin-typescript";
+import { yourFunction } from "rollup-plugin-your-function";
+import { minify } from "terser";
 
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
+
+const terser = () =>
+  yourFunction({
+    output: true,
+    name: "terser",
+    fn: async (source, options) =>
+      minify(source, {
+        module: /^esm?$/.test(options.outputOptions.format),
+        toplevel: options.outputOptions.format === "cjs",
+        sourceMap: true,
+      }),
+  });
 
 export default {
   input: "src/index.ts",

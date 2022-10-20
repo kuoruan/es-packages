@@ -10,19 +10,25 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.12.0",
-    "@typescript-eslint/parser": "^4.12.0",
-    "eslint": "^7.17.0",
+    "@babel/core": "^7.19.3",
+    "@babel/eslint-parser": "^7.19.1",
+    "@babel/plugin-syntax-import-assertions": "^7.18.6",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.0.0",
-    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-import-resolver-typescript": "^3.5.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.10",
-    "husky": "^6.0.0",
+    "husky": "^8.0.1",
     "install-deps-postmerge": "^2.0.1",
-    "lerna": "^4.0.0",
-    "lint-staged": "^12.1.2",
+    "lint-staged": "^13.0.3",
     "prettier": "^2.2.1",
     "typescript": "^4.1.3"
+  },
+  "engines": {
+    "node": ">=12",
+    "pnpm": ">=6"
   }
 }

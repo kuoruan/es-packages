@@ -12,8 +12,13 @@ module.exports = {
     "plugin:import/warnings",
   ],
   plugins: ["prettier", "import", "tsdoc"],
+  parser: "@babel/eslint-parser",
   parserOptions: {
-    ecmaVersion: 2020,
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: ["@babel/plugin-syntax-import-assertions"],
+    },
+    ecmaVersion: "latest",
     sourceType: "module",
   },
   rules: {

@@ -1,6 +1,6 @@
-import typescript from "rollup-plugin-typescript2";
+import typescript from "@rollup/plugin-typescript";
 
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
 
 export default {
   input: "src/index.ts",
@@ -8,7 +8,7 @@ export default {
     {
       file: pkg.main,
       format: "cjs",
-      exports: "auto",
+      exports: "named",
     },
     {
       file: pkg.module,
