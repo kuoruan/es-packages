@@ -22,8 +22,12 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install base packages
-        run: yarn install
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: true
 
       - id: getpackage
         name: Get changed packages
@@ -45,8 +49,6 @@ jobs:
       - name: Build test
         if: steps.getpackage.outputs.packages != ''
         run: |
-          pnpm install
-
           for pkg in ${{ steps.getpackage.outputs.packages }} ; do
             echo "Testing build for $pkg..."
 

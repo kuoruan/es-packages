@@ -30,6 +30,13 @@ jobs:
           registry-url: ${{ matrix.registry-url }}
           scope: '@kuoruan'
 
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: true
+
       - id: get_tag
         name: Get tag
         run: |
@@ -70,8 +77,6 @@ jobs:
 
       - name: Build and publish
         run: |
-          pnpm install
-
           pnpm --filter "@kuoruan/${{ steps.check_package.outputs.folder }}" build
           pnpm --filter "@kuoruan/${{ steps.check_package.outputs.folder }}" publish
         env:
